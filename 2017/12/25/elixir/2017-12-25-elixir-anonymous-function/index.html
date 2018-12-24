@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Anonymous FunctionsElixir 是 一门函数式语言，理所当然函数是一种基本的类型。 匿名函数由 fn 关键字创建。 1234fn  parameter-list -&amp;gt; body  parameter-list -&amp;gt; bodyend 可以把 fn...end 当做字符串两端的引号，只是我们返回的是一个函数而非字符串。我们可以把函数当做值来传递，可以调用他，作为参数传递">
+<meta name="keywords" content="elixir">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elixir functions">
+<meta property="og:url" content="https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/index.html">
+<meta property="og:site_name" content="Chris Young&#39;s Blog">
+<meta property="og:description" content="Anonymous FunctionsElixir 是 一门函数式语言，理所当然函数是一种基本的类型。 匿名函数由 fn 关键字创建。 1234fn  parameter-list -&amp;gt; body  parameter-list -&amp;gt; bodyend 可以把 fn...end 当做字符串两端的引号，只是我们返回的是一个函数而非字符串。我们可以把函数当做值来传递，可以调用他，作为参数传递">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-24T15:56:33.246Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="elixir functions">
+<meta name="twitter:description" content="Anonymous FunctionsElixir 是 一门函数式语言，理所当然函数是一种基本的类型。 匿名函数由 fn 关键字创建。 1234fn  parameter-list -&amp;gt; body  parameter-list -&amp;gt; bodyend 可以把 fn...end 当做字符串两端的引号，只是我们返回的是一个函数而非字符串。我们可以把函数当做值来传递，可以调用他，作为参数传递">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>elixir functions</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/01/04/elixir/2018-01-04-elixir-modules-and-named-functions/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/12/20/elixir/2017-12-20-elixir-immutability/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&text=elixir functions"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&title=elixir functions"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&is_video=false&description=elixir functions"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir functions&body=Check out this article: https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&title=elixir functions"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&title=elixir functions"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&title=elixir functions"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&title=elixir functions"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&name=elixir functions&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Anonymous-Functions"><span class="toc-number">1.</span> <span class="toc-text">Anonymous Functions</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Functions-and-Pattern-Matching"><span class="toc-number">1.1.</span> <span class="toc-text">Functions and Pattern Matching</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#One-Function-Multiple-Bodies"><span class="toc-number">1.2.</span> <span class="toc-text">One Function, Multiple Bodies</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#到文件中去"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">到文件中去</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Functions-Can-Return-Functions"><span class="toc-number">1.3.</span> <span class="toc-text">Functions Can Return Functions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Functions-Remember-Their-Original-Environment"><span class="toc-number">1.4.</span> <span class="toc-text">Functions Remember Their Original Environment</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Parameterized-Functions"><span class="toc-number">1.4.1.</span> <span class="toc-text">Parameterized Functions</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Passing-Functions-As-Arguments"><span class="toc-number">1.5.</span> <span class="toc-text">Passing Functions As Arguments</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pinned-Values-and-Function-Parameters"><span class="toc-number">1.5.1.</span> <span class="toc-text">Pinned Values and Function Parameters</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-amp-Notation"><span class="toc-number">1.5.2.</span> <span class="toc-text">The &amp; Notation</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Functions-Are-the-Core"><span class="toc-number">1.6.</span> <span class="toc-text">Functions Are the Core</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        elixir functions
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="name">Chris Young's Blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-12-25T14:56:26.000Z" itemprop="datePublished">2017-12-25</time>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/elixir/">elixir</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/elixir/">elixir</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Anonymous-Functions"><a href="#Anonymous-Functions" class="headerlink" title="Anonymous Functions"></a>Anonymous Functions</h2><p>Elixir 是 一门函数式语言，理所当然函数是一种基本的类型。</p>
+<p>匿名函数由 fn 关键字创建。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span></span><br><span class="line">  parameter-list -&gt; body</span><br><span class="line">  parameter-list -&gt; body</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>可以把 <code>fn...end</code> 当做字符串两端的引号，只是我们返回的是一个函数而非字符串。我们可以把函数当做值来传递，可以调用他，作为参数传递。<br>最简单的，一个函数有参数列表和函数体，由 <code>-&gt;</code> 分开<br>举个例子，下面定义了一个函数，并将其绑定给 sum 变量，然后调用它：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; sum = <span class="keyword">fn</span> (a, b) -&gt; a + b <span class="keyword">end</span></span><br><span class="line"><span class="comment">#Function&lt;...&gt;</span></span><br><span class="line">iex&gt; sum.(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>在上面，<code>sum.(1,2)</code> 为函数调用，匿名函数需要使用 <code>.</code> 来调用，而具名函数则不需要。<br>即使函数不需要参数，也要使用括号来调用：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; greet = <span class="keyword">fn</span> -&gt; IO.puts <span class="string">"Hello"</span> <span class="keyword">end</span> </span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt;</span></span><br><span class="line">iex&gt; greet.()</span><br><span class="line">Hello</span><br><span class="line"><span class="symbol">:ok</span></span><br></pre></td></tr></table></figure>
+<p>不过，你可以在定义函数时省略括号：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; f1 = <span class="keyword">fn</span> a, b -&gt; a * b <span class="keyword">end</span> </span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt;</span></span><br><span class="line">iex&gt; f1.(<span class="number">5</span>,<span class="number">6</span>)</span><br><span class="line"><span class="number">30</span></span><br><span class="line">iex&gt; f2 = <span class="keyword">fn</span> -&gt; <span class="number">99</span> <span class="keyword">end</span> </span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt; </span></span><br><span class="line">iex&gt; f2.()</span><br><span class="line"><span class="number">99</span></span><br></pre></td></tr></table></figure>
+<h3 id="Functions-and-Pattern-Matching"><a href="#Functions-and-Pattern-Matching" class="headerlink" title="Functions and Pattern Matching"></a>Functions and Pattern Matching</h3><p>当我们调用 <code>sum.(2,3)</code> 时，很容易认为是把 2 赋值给 a，3 赋值给 b。 但其实不是。Elixir 没有<br>赋值。Elixir 总会试图去进行模式匹配。</p>
+<p>譬如 <code>a = 2</code>, Elixir 将 2 绑定到 a 来进行模式匹配，函数调用时，参数就是在进行模式匹配。<br>模式匹配还可以这样：<code>{a, b} = {1, 2}</code><br>比如：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; swap = <span class="keyword">fn</span> &#123;a, b&#125; -&gt; &#123;b, a&#125; <span class="keyword">end</span></span><br><span class="line"><span class="comment">#Function&lt;...&gt;</span></span><br><span class="line">iex&gt; swap.(&#123;<span class="number">6</span>, <span class="number">8</span>&#125;)</span><br><span class="line">&#123;<span class="number">8</span>, <span class="number">6</span>&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="One-Function-Multiple-Bodies"><a href="#One-Function-Multiple-Bodies" class="headerlink" title="One Function, Multiple Bodies"></a>One Function, Multiple Bodies</h3><p>一个函数定义可以有不同的实现，取决于参数的类型和内容，但参数的数量必须一样。<br>Elixir 会进行模式匹配来决定执行哪一个分支。举个例子：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; handle_open = <span class="keyword">fn</span></span><br><span class="line">   &gt;  &#123;<span class="symbol">:ok</span>, file&#125; -&gt; <span class="string">"Read data: <span class="subst">#&#123;IO.read(file, <span class="symbol">:line</span>)&#125;</span>"</span></span><br><span class="line">   &gt;  &#123;<span class="number">_</span>, error&#125; -&gt; <span class="string">"Error: <span class="subst">#&#123;<span class="symbol">:file</span>.format_error(error)&#125;</span>"</span></span><br><span class="line">   &gt; <span class="keyword">end</span></span><br><span class="line"><span class="comment">#Function&lt;...&gt;</span></span><br><span class="line">iex&gt; handle_open.(file.open(<span class="string">"code/helo.exs"</span>))</span><br><span class="line"><span class="string">"Read data: IO.puts xxxxxx"</span></span><br><span class="line">iex&gt; handle_open.(File.open(<span class="string">"nonexistent"</span>))</span><br><span class="line"><span class="string">"Error: no such file or directory"</span></span><br></pre></td></tr></table></figure>
+<p>当打开文件成功，则执行匹配成功的分支，如果失败则执行匹配失败的分支。<br>这个例子中我们还接触了 <code>File</code> 模块，以及字符串插值 <code>#{...}</code>，用过 ruby 和 es6 的都知道吧。</p>
+<h5 id="到文件中去"><a href="#到文件中去" class="headerlink" title="到文件中去"></a>到文件中去</h5><p>代码越来越多，命令行已经不好用了，让我们写到文件中去<br><code>first_steps/handle_open.exs</code></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">handle_open = <span class="keyword">fn</span></span><br><span class="line">&#123;<span class="symbol">:ok</span>, file&#125; -&gt; <span class="string">"First line: <span class="subst">#&#123;IO.read(file, <span class="symbol">:line</span>)&#125;</span>"</span> &#123;<span class="number">_</span>, error&#125; -&gt; <span class="string">"Error: <span class="subst">#&#123;<span class="symbol">:file</span>.format_error(error)&#125;</span>"</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">IO.puts handle_open.(File.open(<span class="string">"Rakefile"</span>)) <span class="comment"># call with a file that exists IO.puts handle_open.(File.open("nonexistent")) # and then with one that doesn't</span></span><br></pre></td></tr></table></figure>
+<p>在 iex 中，输入：<br><code>c &quot;handle_open.exs&quot;</code></p>
+<p>或者直接在命令行中输入：<br><code>elixir handle_open.exs</code></p>
+<p>想直接执行的脚本使用 exs 为后缀，想编译后执行的使用 ex 为后缀。</p>
+<h3 id="Functions-Can-Return-Functions"><a href="#Functions-Can-Return-Functions" class="headerlink" title="Functions Can Return Functions"></a>Functions Can Return Functions</h3><p>来看看这些代码：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; fun1 = <span class="keyword">fn</span> -&gt; <span class="keyword">fn</span> -&gt; <span class="string">"Hello"</span> <span class="keyword">end</span> <span class="keyword">end</span></span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt; </span></span><br><span class="line">iex&gt; fun1.()</span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt; </span></span><br><span class="line">iex&gt; fun1.().()</span><br><span class="line"><span class="string">"Hello"</span></span><br></pre></td></tr></table></figure>
+<p>把第一行展开来看看：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">func1 = <span class="keyword">fn</span> -&gt; </span><br><span class="line">           <span class="keyword">fn</span> -&gt; </span><br><span class="line">             <span class="string">"Hello"</span></span><br><span class="line">           <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>其实就是函数返回函数，类似于 es6 的胖箭头函数。</p>
+<p>我们常常将里面的函数加上括号，看上去更清晰直观。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; fun1 = <span class="keyword">fn</span> -&gt; (<span class="keyword">fn</span> -&gt; <span class="string">"Hello"</span> <span class="keyword">end</span>) <span class="keyword">end</span></span><br><span class="line"><span class="comment">#Function&lt;...&gt;</span></span><br><span class="line">iex&gt; other = fun1.()</span><br><span class="line"><span class="comment">#Function&lt;...&gt;</span></span><br><span class="line">iex&gt; other.()</span><br><span class="line"><span class="string">"Hello"</span></span><br></pre></td></tr></table></figure>
+<h3 id="Functions-Remember-Their-Original-Environment"><a href="#Functions-Remember-Their-Original-Environment" class="headerlink" title="Functions Remember Their Original Environment"></a>Functions Remember Their Original Environment</h3><p>来将嵌套函数更加深入一点：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; greeter = <span class="keyword">fn</span> name -&gt; (<span class="keyword">fn</span> -&gt; <span class="string">"Hello <span class="subst">#&#123;name&#125;</span>"</span> <span class="keyword">end</span>) <span class="keyword">end</span> </span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt;</span></span><br><span class="line">iex&gt; dave_greeter = greeter.(<span class="string">"Dave"</span>) </span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt;</span></span><br><span class="line">iex&gt; dave_greeter.() </span><br><span class="line"><span class="string">"Hello Dave"</span></span><br></pre></td></tr></table></figure>
+<p>类比 js 的闭包吧，就是内层函数加上其作用域上绑定的变量等</p>
+<h4 id="Parameterized-Functions"><a href="#Parameterized-Functions" class="headerlink" title="Parameterized Functions"></a>Parameterized Functions</h4><p>来看看另一个例子：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; add_n = <span class="keyword">fn</span> n -&gt; (<span class="keyword">fn</span> other -&gt; n + other <span class="keyword">end</span>) <span class="keyword">end</span> </span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt;</span></span><br><span class="line">iex&gt; add_two = add_n.(<span class="number">2</span>)</span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt;</span></span><br><span class="line">iex&gt; add_five = add_n.(<span class="number">5</span>) </span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt; </span></span><br><span class="line">iex&gt; add_two.(<span class="number">3</span>)</span><br><span class="line"><span class="number">5</span></span><br><span class="line">iex&gt; add_five.(<span class="number">7</span>)</span><br><span class="line"><span class="number">12</span></span><br></pre></td></tr></table></figure>
+<p>依然可以类比 js</p>
+<h3 id="Passing-Functions-As-Arguments"><a href="#Passing-Functions-As-Arguments" class="headerlink" title="Passing Functions As Arguments"></a>Passing Functions As Arguments</h3><p>函数也是值，所以也可以把函数当做参数传递。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; times_2 = <span class="keyword">fn</span> n -&gt; n * <span class="number">2</span> <span class="keyword">end</span> </span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt;</span></span><br><span class="line">iex&gt; apply = <span class="keyword">fn</span> (fun, value) -&gt; fun.(value) <span class="keyword">end</span> </span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt;</span></span><br><span class="line">iex&gt; apply.(times_2, <span class="number">6</span>)</span><br><span class="line"><span class="number">12</span></span><br></pre></td></tr></table></figure>
+<p>在 Elixir 的代码中，这种传递函数的代码随处可见。比如，内置的 Enum 模块的 map 方法，它<br>接收 两个参数，一个 collection 和一个函数，然后返回一个 list。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; list = [<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>]</span><br><span class="line">iex&gt; Enum.map list, <span class="keyword">fn</span> elem -&gt; elem * <span class="number">2</span> <span class="keyword">end</span> </span><br><span class="line">[<span class="number">2</span>, <span class="number">6</span>, <span class="number">10</span>, <span class="number">14</span>, <span class="number">18</span>]</span><br><span class="line">iex&gt; Enum.map list, <span class="keyword">fn</span> elem -&gt; elem * elem <span class="keyword">end</span> </span><br><span class="line">[<span class="number">1</span>, <span class="number">9</span>, <span class="number">25</span>, <span class="number">49</span>, <span class="number">81</span>]</span><br><span class="line">iex&gt; Enum.map list, <span class="keyword">fn</span> elem -&gt; elem &gt; <span class="number">6</span> <span class="keyword">end</span> </span><br><span class="line">[<span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="keyword">true</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="Pinned-Values-and-Function-Parameters"><a href="#Pinned-Values-and-Function-Parameters" class="headerlink" title="Pinned Values and Function Parameters"></a>Pinned Values and Function Parameters</h4><p>pin 操作对于函数参数的模式匹配同样适用</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># functions/pin.exs</span></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Greeter</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">for</span></span>(name, greeting) <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">fn</span></span><br><span class="line">      (^name) -&gt; <span class="string">"<span class="subst">#&#123;greeting&#125;</span> <span class="subst">#&#123;name&#125;</span>"</span></span><br><span class="line">      (<span class="number">_</span>) -&gt; <span class="string">"I don't know you"</span> <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span> </span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">mr_valim = Greeter.for(<span class="string">"José"</span>, <span class="string">"Oi!"</span>) </span><br><span class="line"></span><br><span class="line">IO.puts mr_valim.(<span class="string">"José"</span>) <span class="comment"># =&gt; Oi! José</span></span><br><span class="line">IO.puts mr_valim.(<span class="string">"dave"</span>) <span class="comment"># =&gt; I don't know you</span></span><br></pre></td></tr></table></figure>
+<h4 id="The-amp-Notation"><a href="#The-amp-Notation" class="headerlink" title="The &amp; Notation"></a>The &amp; Notation</h4><p>匿名函数的简写。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; add_one = &amp;(&amp;<span class="number">1</span> + <span class="number">1</span>) <span class="comment"># same as add_one = fn (n) -&gt; n + 1 end </span></span><br><span class="line"><span class="comment">#Function&lt;6.17052888 in :erl_eval.expr/5&gt;</span></span><br><span class="line">iex&gt; add_one.(<span class="number">44</span>)</span><br><span class="line"><span class="number">45</span></span><br><span class="line">iex&gt; square = &amp;(&amp;<span class="number">1</span> * &amp;<span class="number">1</span>) </span><br><span class="line"><span class="comment">#Function&lt;6.17052888 in :erl_eval.expr/5&gt;</span></span><br><span class="line">iex&gt; square.(<span class="number">8</span>)</span><br><span class="line"><span class="number">64</span></span><br><span class="line">iex&gt; speak = &amp;(IO.puts(&amp;<span class="number">1</span>)) </span><br><span class="line">&amp;IO.puts/<span class="number">1</span></span><br><span class="line">iex&gt; speak.(<span class="string">"Hello"</span>)</span><br><span class="line">Hello</span><br><span class="line"><span class="symbol">:ok</span></span><br></pre></td></tr></table></figure>
+<p>如上 <code>&amp;</code> 符号将其后的表达式转为函数，占位符 <code>&amp;1,&amp;2...</code> 表示参数列表。所以: <code>&amp;(&amp;1 + &amp;2) 等价于 fn p1, p2 -&gt; p1 + p2 end</code></p>
+<p>看到 speak 那行没，Elixir 将其做了优化，直接引用 <code>IO.puts/1</code> 函数。<br>这种优化的前提是 参数 顺序一致。<br>比如：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; rnd = &amp;(Float.round(&amp;<span class="number">1</span>, &amp;<span class="number">2</span>)) </span><br><span class="line">&amp;Float.round/<span class="number">2</span></span><br><span class="line">iex&gt; rnd = &amp;(Float.round(&amp;<span class="number">2</span>, &amp;<span class="number">1</span>))</span><br><span class="line"><span class="comment">#Function&lt;12.17052888 in :erl_eval.expr/5&gt;</span></span><br></pre></td></tr></table></figure>
+<p>再比如：<code>&amp;abs(&amp;1)</code> 返回来的是这个 <code>&amp;:erlang.abs/1.</code><br>因为 Elixir 是基于 Erlang VM 的。</p>
+<p>因为 <code>[]</code> 和 <code>{}</code> 都是操作符，字面的 list 和 tuple 也可以转为 function。下面这个例子中，定义了一个函数，返回值是两个整数的商和余数组成的 tuple。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; divrem = &amp;&#123; div(&amp;<span class="number">1</span>, &amp;<span class="number">2</span>), rem(&amp;<span class="number">1</span>, &amp;<span class="number">2</span>) &#125;</span><br><span class="line"><span class="comment">#Function&lt;...&gt;</span></span><br><span class="line">iex&gt; divrem.(<span class="number">13</span>, <span class="number">5</span>)</span><br><span class="line">&#123;<span class="number">2</span>, <span class="number">3</span>&#125;</span><br></pre></td></tr></table></figure>
+<p><code>&amp;</code> 函数的第二种形式，给定一个具名的函数及其参数个数，前面加 &amp; 符号，即可将其转为匿名函数。<br>来看看这些例子：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; l = &amp;length/<span class="number">1</span></span><br><span class="line">&amp;<span class="symbol">:erlang</span>.length/<span class="number">1</span> </span><br><span class="line">iex&gt; l.([<span class="number">1</span>,<span class="number">3</span>,<span class="number">5</span>,<span class="number">7</span>]) </span><br><span class="line"><span class="number">4</span></span><br><span class="line"></span><br><span class="line">iex&gt; len = &amp;Enum.count/<span class="number">1</span> </span><br><span class="line">&amp;Enum.count/<span class="number">1</span></span><br><span class="line">iex&gt; len.([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>])</span><br><span class="line"><span class="number">4</span></span><br><span class="line"></span><br><span class="line">iex&gt; m = &amp;Kernel.min/<span class="number">2</span> </span><br><span class="line">&amp;<span class="symbol">:erlang</span>.min/<span class="number">2</span></span><br><span class="line">iex&gt; m.(<span class="number">99</span>,<span class="number">88</span>)</span><br><span class="line"><span class="number">88</span></span><br></pre></td></tr></table></figure>
+<p><code>&amp;</code> 的方式 给了我们一种传递函数的绝妙方式。<br>看看下面的例子：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; Enum.map [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], &amp;(&amp;<span class="number">1</span> + <span class="number">1</span>)</span><br><span class="line">[<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line">iex&gt; Enum.map [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], &amp;(&amp;<span class="number">1</span> * &amp;<span class="number">1</span>)</span><br><span class="line">[<span class="number">1</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">16</span>]</span><br><span class="line">iex&gt; Enum.map [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], &amp;(&amp;<span class="number">1</span> &lt; <span class="number">3</span>)</span><br><span class="line">[<span class="keyword">true</span>, <span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="Functions-Are-the-Core"><a href="#Functions-Are-the-Core" class="headerlink" title="Functions Are the Core"></a>Functions Are the Core</h3><p>在一开始，我们说过 编程的基本就是转换数据。而函数就是数据转换的小引擎。在 Elixir 中函数是核心点。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Anonymous-Functions"><span class="toc-number">1.</span> <span class="toc-text">Anonymous Functions</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Functions-and-Pattern-Matching"><span class="toc-number">1.1.</span> <span class="toc-text">Functions and Pattern Matching</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#One-Function-Multiple-Bodies"><span class="toc-number">1.2.</span> <span class="toc-text">One Function, Multiple Bodies</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#到文件中去"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">到文件中去</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Functions-Can-Return-Functions"><span class="toc-number">1.3.</span> <span class="toc-text">Functions Can Return Functions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Functions-Remember-Their-Original-Environment"><span class="toc-number">1.4.</span> <span class="toc-text">Functions Remember Their Original Environment</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Parameterized-Functions"><span class="toc-number">1.4.1.</span> <span class="toc-text">Parameterized Functions</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Passing-Functions-As-Arguments"><span class="toc-number">1.5.</span> <span class="toc-text">Passing Functions As Arguments</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Pinned-Values-and-Function-Parameters"><span class="toc-number">1.5.1.</span> <span class="toc-text">Pinned Values and Function Parameters</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-amp-Notation"><span class="toc-number">1.5.2.</span> <span class="toc-text">The &amp; Notation</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Functions-Are-the-Core"><span class="toc-number">1.6.</span> <span class="toc-text">Functions Are the Core</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&text=elixir functions"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&title=elixir functions"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&is_video=false&description=elixir functions"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir functions&body=Check out this article: https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&title=elixir functions"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&title=elixir functions"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&title=elixir functions"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&title=elixir functions"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/&name=elixir functions&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 lichengzhi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

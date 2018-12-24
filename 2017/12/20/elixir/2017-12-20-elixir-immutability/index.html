@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="ImmutabilityElixir 强制使用不可变数据 为什么需要 Immutable举个例子： 123array = [1, 2, 3]do_something_with(array)print(array) 在大多数语言中，你可能不太确定最后打印的 array 是啥子，因为 do_something_with 函数接收的是数组的引用，如果函数内改变了数组的内容，则 array 也会变。更甚者">
+<meta name="keywords" content="elixir">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elixir immutability and data type">
+<meta property="og:url" content="https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/index.html">
+<meta property="og:site_name" content="Chris Young&#39;s Blog">
+<meta property="og:description" content="ImmutabilityElixir 强制使用不可变数据 为什么需要 Immutable举个例子： 123array = [1, 2, 3]do_something_with(array)print(array) 在大多数语言中，你可能不太确定最后打印的 array 是啥子，因为 do_something_with 函数接收的是数组的引用，如果函数内改变了数组的内容，则 array 也会变。更甚者">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-24T15:56:16.380Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="elixir immutability and data type">
+<meta name="twitter:description" content="ImmutabilityElixir 强制使用不可变数据 为什么需要 Immutable举个例子： 123array = [1, 2, 3]do_something_with(array)print(array) 在大多数语言中，你可能不太确定最后打印的 array 是啥子，因为 do_something_with 函数接收的是数组的引用，如果函数内改变了数组的内容，则 array 也会变。更甚者">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>elixir immutability and data type</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/12/25/elixir/2017-12-25-elixir-anonymous-function/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&text=elixir immutability and data type"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&title=elixir immutability and data type"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&is_video=false&description=elixir immutability and data type"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir immutability and data type&body=Check out this article: https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&title=elixir immutability and data type"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&title=elixir immutability and data type"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&title=elixir immutability and data type"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&title=elixir immutability and data type"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&name=elixir immutability and data type&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Immutability"><span class="toc-number">1.</span> <span class="toc-text">Immutability</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么需要-Immutable"><span class="toc-number">1.1.</span> <span class="toc-text">为什么需要 Immutable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Elixir-中的数据"><span class="toc-number">1.2.</span> <span class="toc-text">Elixir 中的数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不可变性对性能的影响"><span class="toc-number">1.3.</span> <span class="toc-text">不可变性对性能的影响</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Copying-Data"><span class="toc-number">1.3.1.</span> <span class="toc-text">Copying Data</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Garbage-Collection"><span class="toc-number">1.3.2.</span> <span class="toc-text">Garbage Collection</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编程中的不可变数据"><span class="toc-number">1.4.</span> <span class="toc-text">编程中的不可变数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elixir-Basics"><span class="toc-number">2.</span> <span class="toc-text">Elixir Basics</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Built-in-Types"><span class="toc-number">2.1.</span> <span class="toc-text">Built-in Types</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Value-Type"><span class="toc-number">2.2.</span> <span class="toc-text">Value Type</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Integers"><span class="toc-number">2.2.1.</span> <span class="toc-text">Integers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Floating-Point-Numbers"><span class="toc-number">2.2.2.</span> <span class="toc-text">Floating-Point Numbers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Atoms"><span class="toc-number">2.2.3.</span> <span class="toc-text">Atoms</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Ranges"><span class="toc-number">2.2.4.</span> <span class="toc-text">Ranges</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Regular-Expressions"><span class="toc-number">2.2.5.</span> <span class="toc-text">Regular Expressions</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#System-Types"><span class="toc-number">2.3.</span> <span class="toc-text">System Types</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Collection-Types"><span class="toc-number">2.4.</span> <span class="toc-text">Collection Types</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Tuple"><span class="toc-number">2.4.1.</span> <span class="toc-text">Tuple</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Lists"><span class="toc-number">2.4.2.</span> <span class="toc-text">Lists</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Keyword-Lists"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">Keyword Lists</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Maps"><span class="toc-number">2.5.</span> <span class="toc-text">Maps</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Accessing-a-Map"><span class="toc-number">2.5.1.</span> <span class="toc-text">Accessing a Map</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Binaries"><span class="toc-number">2.6.</span> <span class="toc-text">Binaries</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dates-and-Times"><span class="toc-number">2.7.</span> <span class="toc-text">Dates and Times</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Names-Source-Files-Conventions-Operators-and-So-On"><span class="toc-number">2.8.</span> <span class="toc-text">Names, Source Files, Conventions, Operators, and So On</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Truth"><span class="toc-number">2.9.</span> <span class="toc-text">Truth</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Operators"><span class="toc-number">2.10.</span> <span class="toc-text">Operators</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Boolean-operators"><span class="toc-number">2.10.1.</span> <span class="toc-text">Boolean operators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Relaxed-Boolean-operators"><span class="toc-number">2.10.2.</span> <span class="toc-text">Relaxed Boolean operators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Arithmetic-operators"><span class="toc-number">2.10.3.</span> <span class="toc-text">Arithmetic operators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Join-operators"><span class="toc-number">2.10.4.</span> <span class="toc-text">Join operators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-in-opeator"><span class="toc-number">2.10.5.</span> <span class="toc-text">The in opeator</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Variable-Scope"><span class="toc-number">2.11.</span> <span class="toc-text">Variable Scope</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#The-with-Expression"><span class="toc-number">2.11.1.</span> <span class="toc-text">The with Expression</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#with-and-Pattern-Matching"><span class="toc-number">2.11.2.</span> <span class="toc-text">with and Pattern Matching</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#A-minor-Gotcha"><span class="toc-number">2.11.3.</span> <span class="toc-text">A minor Gotcha</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#完"><span class="toc-number">2.12.</span> <span class="toc-text">完</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        elixir immutability and data type
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="name">Chris Young's Blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2017-12-20T14:56:26.000Z" itemprop="datePublished">2017-12-20</time>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/elixir/">elixir</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/elixir/">elixir</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Immutability"><a href="#Immutability" class="headerlink" title="Immutability"></a>Immutability</h2><p>Elixir 强制使用不可变数据</p>
+<h3 id="为什么需要-Immutable"><a href="#为什么需要-Immutable" class="headerlink" title="为什么需要 Immutable"></a>为什么需要 Immutable</h3><p>举个例子：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">array = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">do_something_with(array)</span><br><span class="line">print(array)</span><br></pre></td></tr></table></figure>
+<p>在大多数语言中，你可能不太确定最后打印的 array 是啥子，因为 <code>do_something_with</code> 函数接收的是数组的引用，如果函数内改变了数组的内容，则 array 也会变。<br>更甚者，在多线程中，你永远都不知道他被谁改变了。</p>
+<h3 id="Elixir-中的数据"><a href="#Elixir-中的数据" class="headerlink" title="Elixir 中的数据"></a>Elixir 中的数据</h3><p>elixir 规避了所有这些问题，在 elixir 中，所有的值都是不可变的。<br>如果你想将 <code>[1, 2, 3]</code> 中的元素都加上100，怎么办？elixir 将生成一个原数据的拷贝，而原数据不变。</p>
+<h3 id="不可变性对性能的影响"><a href="#不可变性对性能的影响" class="headerlink" title="不可变性对性能的影响"></a>不可变性对性能的影响</h3><h4 id="Copying-Data"><a href="#Copying-Data" class="headerlink" title="Copying Data"></a>Copying Data</h4><p>我们都知道复制一份数据是要消耗性能的，相反减少复制能提高性能。因为 Elixir 知道存在的数据是不可变的，可以直接重用，所以在构建新的数据结构时，可以直接引用为新数据的一部分。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">list1 = [<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]</span><br><span class="line">list2 = [ <span class="number">4</span> | list1]</span><br><span class="line">[<span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<p>在大多数语言中，list2 可能是一个包含4个新元素的数据，其中后面3个由 list1 复制而来。而 Elixir 知道 list1 不会改变，所以 Elixir 直接 将 4 和 list1 组成新的数组。</p>
+<h4 id="Garbage-Collection"><a href="#Garbage-Collection" class="headerlink" title="Garbage Collection"></a>Garbage Collection</h4><p>对垃圾回收机制不是太熟，但因为也不会影响什么性能，毕竟性能也是 Elixir 的优势。</p>
+<p>引用：</p>
+<blockquote>
+<p>The other performance issue with a transformational language is that you quite often end up leaving old values unused when you create new values from them. This leaves a bunch of things using up memory on the heap, so garbage collection has to reclaim them.<br>Most modern languages have a garbage collector, and developers have grown to be suspicious of them—they can impact performance quite badly.<br>But the cool thing about Elixir is that you write your code using lots and lots of processes, and each process has its own heap. The data in your application is divvied up between these processes, so each individual heap is much, much smaller than would have been the case if all the data had been in a single heap. As a result, garbage collection runs faster. If a process terminates before its heap becomes full, all its data is discarded—no garbage collection is required.</p>
+</blockquote>
+<h3 id="编程中的不可变数据"><a href="#编程中的不可变数据" class="headerlink" title="编程中的不可变数据"></a>编程中的不可变数据</h3><p>当你接受了不可变数据的概念之后，使用其编程将是非常简单的事。<br>只要记住任何函数和数据变换都是返回一个新的拷贝。因此我们不是将字符串的首字符变成大写，而是我们返回一个首字符大写的新的拷贝。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">"elixir"</span></span><br><span class="line">cap_anme = String.capitalize name</span><br><span class="line"><span class="string">"Elixir"</span></span><br><span class="line">name</span><br><span class="line">elixir</span><br></pre></td></tr></table></figure>
+<p>在面向对象的语言中，我们喜欢使用 name.capitalize()，但是在面向对象的语言中，状态是可以改变的，当你调用 name.capitalize() 时，你没法立即确定这个函数是改变了原数据，还是返回了一个新的拷贝，还是两者兼是。<br>在函数式编程语言中，我们转换数据，但不是在原来的基础上修改。</p>
+<h2 id="Elixir-Basics"><a href="#Elixir-Basics" class="headerlink" title="Elixir Basics"></a>Elixir Basics</h2><h3 id="Built-in-Types"><a href="#Built-in-Types" class="headerlink" title="Built-in Types"></a>Built-in Types</h3><ul>
+<li>Value types:<ul>
+<li>Arbitrary-sized integers 整型</li>
+<li>Floating-point numbers 浮点数</li>
+<li>Atoms  原子</li>
+<li>Ranges 范围</li>
+<li>Regular Expressions 正则</li>
+</ul>
+</li>
+<li>System types:<ul>
+<li>PIDs and ports</li>
+<li>References</li>
+</ul>
+</li>
+<li>Collection types:<ul>
+<li>Tuples</li>
+<li>Lists</li>
+<li>Maps</li>
+<li>Binaries</li>
+</ul>
+</li>
+</ul>
+<p>Functions 也是函数，在后面的专门介绍。<br>strings 和 structures 是有上面的基础类型构建的，后面专门介绍。<br>regular expressions 和 ranges 是否是值类型是有争议的，在技术上不是，但可以把他们当做单独的类型。</p>
+<h3 id="Value-Type"><a href="#Value-Type" class="headerlink" title="Value Type"></a>Value Type</h3><p>值类型 在 Elixir 中是 numbers, names, ranges, regular expressions 这几种</p>
+<h4 id="Integers"><a href="#Integers" class="headerlink" title="Integers"></a>Integers</h4><p>整型可以写为 decimal(1234), hexadecimal(0xcafe), Octal(0o765), 和 binary(0b1010)。</p>
+<p>decimal umber 可以包含下划线，用于分开巨大的数，比如 <code>1_000_000</code>（中日也可以为 <code>100_0000</code>）。</p>
+<p>整数的大小是不受限制的。</p>
+<h4 id="Floating-Point-Numbers"><a href="#Floating-Point-Numbers" class="headerlink" title="Floating-Point Numbers"></a>Floating-Point Numbers</h4><p>有小数点的为浮点数，至少有一个小数位。<br>下面这些都是：<br><code>1.0        0.3333      0.314159e1        314159.0e-5</code><br>浮点数是 IEEE 754 标准双精度，16digits of accuracy，最大 10的308次方。</p>
+<h4 id="Atoms"><a href="#Atoms" class="headerlink" title="Atoms"></a>Atoms</h4><p>Atoms 是常量，表示什么东西的名字。以冒号开头，比如下面的：<br><code>:fred     :is_binary?     :var@2        :&lt;&gt;       :===        :&quot;func/3&quot;     :&quot;long john silver&quot;</code></p>
+<h4 id="Ranges"><a href="#Ranges" class="headerlink" title="Ranges"></a>Ranges</h4><p>start…end 形式的为 Ranges, start 和 end 为整数，跟 ruby 一样。</p>
+<h4 id="Regular-Expressions"><a href="#Regular-Expressions" class="headerlink" title="Regular Expressions"></a>Regular Expressions</h4><p>Elixir 中的正则表达式为： <code>~r{regexp}  or  ~r{regexp}opts</code></p>
+<p>使用：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; Regex.run ~r&#123;[aeiou]&#125;, <span class="string">"caterpillar"</span></span><br><span class="line">[<span class="string">"a"</span>]</span><br><span class="line">&gt; Regex.scan ~r&#123;[aeiou]&#125;, <span class="string">"caterpillar"</span></span><br><span class="line">[<span class="string">"a"</span>], [<span class="string">"e"</span>], [<span class="string">"i"</span>], [<span class="string">"a"</span>]]</span><br><span class="line">&gt; Regex.split ~r&#123;[aeiou]&#125;, <span class="string">"caterpillar"</span></span><br><span class="line">[<span class="string">"c"</span>, <span class="string">"t"</span>, <span class="string">"rp"</span>, <span class="string">"ll"</span>, <span class="string">"r"</span>]</span><br><span class="line">&gt; Regex.replace ~r&#123;[aeiou]&#125;, <span class="string">"caterpillar"</span>, <span class="string">"*"</span></span><br><span class="line"><span class="string">"c*t*rp*ll*r"</span></span><br></pre></td></tr></table></figure>
+<h3 id="System-Types"><a href="#System-Types" class="headerlink" title="System Types"></a>System Types</h3><p>PIDs and Ports, References 暂时先不说</p>
+<h3 id="Collection-Types"><a href="#Collection-Types" class="headerlink" title="Collection Types"></a>Collection Types</h3><h4 id="Tuple"><a href="#Tuple" class="headerlink" title="Tuple"></a>Tuple</h4><p>tuple 类似于数组？</p>
+<p>可以表示为：<br><code>{1, 2}    { :ok, 42, &quot;next&quot; }  { :error, :enoent }</code><br>一个典型的 Elixir tuple 有 2 到 4 个元素，多了的话，你可以使用 maps 或 stucts 了。</p>
+<p>在 tuple 中使用模式匹配</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&gt; &#123;status, count, action&#125; = &#123;<span class="symbol">:ok</span>, <span class="number">42</span>, <span class="string">"next"</span>&#125;</span><br><span class="line">&#123; <span class="symbol">:ok</span>, <span class="number">42</span>, <span class="string">"next"</span>&#125;</span><br><span class="line">&gt; status</span><br><span class="line"><span class="symbol">:ok</span></span><br><span class="line">&gt; count</span><br><span class="line"><span class="number">42</span></span><br><span class="line">&gt; action</span><br><span class="line"><span class="string">"next"</span></span><br></pre></td></tr></table></figure>
+<p>tuple 常用于函数返回值，当没有错误发生时，tuple 的第一个元素为 <code>:ok</code>。比如你打开一个文件：<br><code>&gt; {status, file} = File.open(&quot;mix.exs&quot;)</code><br><code>{:ok, #PID&lt;0.39.0&gt;}</code></p>
+<p>如果发生错误呢?</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; &#123; <span class="symbol">:ok</span>, file &#125; = File.open(<span class="string">"mix.exs"</span>)</span><br><span class="line">&#123;<span class="symbol">:ok</span>, <span class="comment">#PID&lt;0.39.0&gt;&#125;</span></span><br><span class="line">iex&gt; &#123; <span class="symbol">:ok</span>, file &#125; = File.open(<span class="string">"non-existent-file"</span>)</span><br><span class="line">** (MatchError) no match of right hand side <span class="symbol">value:</span> &#123;<span class="symbol">:error</span>, <span class="symbol">:enoent</span>&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Lists"><a href="#Lists" class="headerlink" title="Lists"></a>Lists</h4><p>list 不像其他语言的数组，tuple 更像数组。list 是链表结构，所以 list 循序遍历是很简单的操作，而随机访问则代价高昂。</p>
+<p>List 有一个特点，记得我们之前所说的所有的 Elixir 数据结构都是不可变的吗？这就意味着一个 list 一旦被创建，它就无法改变了。<br>所以，如果我们想删除 list 中的第一个元素，留下其余的，我们不必复制整个数组，我们返回指向 tail 的指针（引用）即可。</p>
+<p>list 有一些独特的操作：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>] ++ [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>]</span><br><span class="line">iex&gt; [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>] -- [<span class="number">2</span>, <span class="number">4</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">3</span>]</span><br><span class="line">iex&gt; <span class="number">1</span> <span class="keyword">in</span> [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]</span><br><span class="line"><span class="keyword">true</span></span><br><span class="line">iex&gt; <span class="string">"wombat"</span> <span class="keyword">in</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>] <span class="keyword">false</span></span><br></pre></td></tr></table></figure>
+<h5 id="Keyword-Lists"><a href="#Keyword-Lists" class="headerlink" title="Keyword Lists"></a>Keyword Lists</h5><p>元素为 key/value 结构的元素很常见，所以 Elixir 给了一种简写， 比如:<br><code>[ name: &quot;Dave&quot;, city: &quot;Dallas&quot;, likes: &quot;Programming&quot; ]</code><br>Elixir 将其转变为：<br><code>[ {:name, &quot;Dave&quot;}, {:city, &quot;Dallas&quot;}, {:likes, &quot;Programming&quot;} ]</code></p>
+<p>如果 keyword list 是函数调用时的最后一个参数：<br><code>DB.save record, [ {:use_transaction, true}, {:logging, &quot;HIGH&quot;} ]</code><br>Elixir 中可以简写为:<br><code>DB.save record, use_transaction: true, logging: &quot;HIGH&quot;</code></p>
+<p>当然, 在任何链式类型的结构中，关键字列表的括号都是可以省略的：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; [<span class="number">1</span>, <span class="symbol">fred:</span> <span class="number">1</span>, <span class="symbol">dave:</span> <span class="number">2</span>]</span><br><span class="line">[<span class="number">1</span>, &#123;<span class="symbol">:fred</span>, <span class="number">1</span>&#125;, &#123;<span class="symbol">:dave</span>, <span class="number">2</span>&#125;] </span><br><span class="line">iex&gt; &#123;<span class="number">1</span>, <span class="symbol">fred:</span> <span class="number">1</span>, <span class="symbol">dave:</span> <span class="number">2</span>&#125;</span><br><span class="line">&#123;<span class="number">1</span>, [<span class="symbol">fred:</span> <span class="number">1</span>, <span class="symbol">dave:</span> <span class="number">2</span>]&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Maps"><a href="#Maps" class="headerlink" title="Maps"></a>Maps</h3><p>map 是键值对的集合。比如：<br><code>%{ key1 =&gt; value, key2 =&gt; value}</code></p>
+<p>举一些例子：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; states = %&#123; <span class="string">"AL"</span> =&gt; <span class="string">"Alabama"</span>, <span class="string">"WI"</span> =&gt; <span class="string">"Wisconsin"</span> &#125;</span><br><span class="line">%&#123;<span class="string">"AL"</span> =&gt; <span class="string">"Alabama"</span>, <span class="string">"WI"</span> =&gt; <span class="string">"Wisconsin"</span>&#125;</span><br><span class="line">iex&gt; responses = %&#123; &#123; <span class="symbol">:error</span>, <span class="symbol">:enoent</span> &#125; =&gt; <span class="symbol">:fatal</span>, &#123; <span class="symbol">:error</span>, <span class="symbol">:busy</span> &#125; =&gt; <span class="symbol">:retry</span> &#125; </span><br><span class="line">%&#123; &#123;<span class="symbol">:error</span>, <span class="symbol">:busy</span>&#125; =&gt; <span class="symbol">:retry</span>, &#123;<span class="symbol">:error</span>, <span class="symbol">:enoent</span>&#125; =&gt; <span class="symbol">:fatal</span>&#125;</span><br><span class="line">iex&gt; colors = %&#123; <span class="symbol">:red</span> =&gt; <span class="number">0xff0000</span>, <span class="symbol">:green</span> =&gt; <span class="number">0x00ff00</span>, <span class="symbol">:blue</span> =&gt; <span class="number">0x0000ff</span> &#125; </span><br><span class="line">%&#123;<span class="symbol">blue:</span> <span class="number">255</span>, <span class="symbol">green:</span> <span class="number">65280</span>, <span class="symbol">red:</span> <span class="number">16711680</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>如上可见，字符串、tuple 和 atoms 都可以用做 map 的 key</p>
+<p>如果使用 atom 做 key，你可以使用 keyword list 中的简写：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; colors = %&#123; <span class="symbol">red:</span> <span class="number">0xff0000</span>, <span class="symbol">green:</span> <span class="number">0x00ff00</span>, <span class="symbol">blue:</span> <span class="number">0x0000ff</span> &#125; %&#123;<span class="symbol">blue:</span> <span class="number">255</span>, <span class="symbol">green:</span> <span class="number">65280</span>, <span class="symbol">red:</span> <span class="number">16711680</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>你还可以使用表达式做为 key：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; name = <span class="string">"José Valim"</span></span><br><span class="line"><span class="string">"José Valim"</span></span><br><span class="line">iex&gt; %&#123; String.downcase(name) =&gt; name &#125; %&#123;<span class="string">"josé valim"</span> =&gt; <span class="string">"José Valim"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>为什么我们同时需要 map 和 keyword list ？<br>map 的 key 是唯一的，而 keyword list 的 key 可以重复。 map 更高效，可以用于 模式匹配。</p>
+<h4 id="Accessing-a-Map"><a href="#Accessing-a-Map" class="headerlink" title="Accessing a Map"></a>Accessing a Map</h4><p>访问对象，跟 js 中访问json对象一样一样的.<br>一，使用方括号：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; states = %&#123; <span class="string">"AL"</span> =&gt; <span class="string">"Alabama"</span>, <span class="string">"WI"</span> =&gt; <span class="string">"Wisconsin"</span> &#125; %&#123;<span class="string">"AL"</span> =&gt; <span class="string">"Alabama"</span>, <span class="string">"WI"</span> =&gt; <span class="string">"Wisconsin"</span>&#125;</span><br><span class="line">iex&gt; states[<span class="string">"AL"</span>]</span><br><span class="line"><span class="string">"Alabama"</span></span><br><span class="line">iex&gt; states[<span class="string">"TX"</span>] </span><br><span class="line"><span class="keyword">nil</span></span><br><span class="line">iex&gt; response_types = %&#123; &#123; <span class="symbol">:error</span>, <span class="symbol">:enoent</span> &#125; =&gt; <span class="symbol">:fatal</span>, ...&gt; &#123; <span class="symbol">:error</span>, <span class="symbol">:busy</span> &#125; =&gt; <span class="symbol">:retry</span> &#125; </span><br><span class="line">`%&#123; &#123;<span class="symbol">:error</span>, <span class="symbol">:busy</span>&#125; =&gt; <span class="symbol">:retry</span>, &#123;<span class="symbol">:error</span>, <span class="symbol">:enoent</span>&#125; =&gt; <span class="symbol">:fatal</span>&#125;`</span><br><span class="line">iex&gt; response_types[&#123;<span class="symbol">:error</span>,<span class="symbol">:busy</span>&#125;]</span><br><span class="line"><span class="symbol">:retry</span></span><br></pre></td></tr></table></figure>
+<p>如果 map 的key  为 atom，还可以使用 <code>.</code> 来访问：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; colors = %&#123; <span class="symbol">red:</span> <span class="number">0xff0000</span>, <span class="symbol">green:</span> <span class="number">0x00ff00</span>, <span class="symbol">blue:</span> <span class="number">0x0000ff</span> &#125; %&#123;<span class="symbol">blue:</span> <span class="number">255</span>, <span class="symbol">green:</span> <span class="number">65280</span>, <span class="symbol">red:</span> <span class="number">16711680</span>&#125;</span><br><span class="line">iex&gt; colors[<span class="symbol">:red</span>]</span><br><span class="line"><span class="number">16711680</span></span><br><span class="line">iex&gt; colors.green <span class="number">65280</span></span><br></pre></td></tr></table></figure>
+<h3 id="Binaries"><a href="#Binaries" class="headerlink" title="Binaries"></a>Binaries</h3><p>二进制的表示： <code>&lt;&lt; ... &gt;&gt;</code></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; bin = &lt;&lt; <span class="number">1</span>, <span class="number">2</span> &gt;&gt;</span><br><span class="line">&lt;&lt; <span class="number">1</span>, <span class="number">2</span>&gt;&gt;</span><br><span class="line">iex&gt; byte_size bin</span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
+<h3 id="Dates-and-Times"><a href="#Dates-and-Times" class="headerlink" title="Dates and Times"></a>Dates and Times</h3><p>Elixir 1.3 加入的日历模块，以及 4 种 日期时间相关的类型。</p>
+<p>Calendar 模块用于操作日期，现在只有 Calendar.ISO 实现，ISO-8601表示格林乔治时间。</p>
+<p>Date 类型，包含了 year, month, day 和 calendar 的引用。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; d1 = Date.new(<span class="number">2016</span>, <span class="number">12</span>, <span class="number">25</span>)</span><br><span class="line">&#123;<span class="symbol">:ok</span>, ~D[<span class="number">2016</span>-<span class="number">12</span>-<span class="number">25</span>]&#125;</span><br><span class="line">iex&gt; &#123;<span class="symbol">:ok</span>, d1&#125; = Date.new(<span class="number">2016</span>, <span class="number">12</span>, <span class="number">25</span>)</span><br><span class="line">&#123;<span class="symbol">:ok</span>, ~D[<span class="number">2016</span>-<span class="number">12</span>-<span class="number">25</span>]&#125;</span><br><span class="line">iex&gt; d2 = ~D[<span class="number">2016</span>-<span class="number">12</span>-<span class="number">25</span>]</span><br><span class="line">~D[<span class="number">2016</span>-<span class="number">12</span>-<span class="number">25</span>]</span><br><span class="line">iex&gt; d1 == d2</span><br><span class="line"><span class="keyword">true</span></span><br><span class="line">iex&gt; d1</span><br><span class="line">~D[<span class="number">2016</span>-<span class="number">12</span>-<span class="number">25</span>]</span><br><span class="line">iex&gt; inspect d1, <span class="symbol">structs:</span> <span class="keyword">false</span></span><br><span class="line"><span class="string">"%&#123;__struct__: Date, calendar: Calendar.ISO, day: 25, month: 12, year: 2016&#125;"</span></span><br></pre></td></tr></table></figure>
+<p>Time 类型包含 hour, minute, second, fractions of a sencond。The fraction is stored as a tuple containing microseconds and the number of significant digits.</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">iex(<span class="number">35</span>)&gt; t1 = Time.new(<span class="number">12</span>, <span class="number">34</span>, <span class="number">56</span>) &#123;<span class="symbol">:ok</span>, ~T[<span class="number">12</span><span class="symbol">:</span><span class="number">34</span><span class="symbol">:</span><span class="number">56</span>]&#125;</span><br><span class="line">iex(<span class="number">36</span>)&gt; t2 = ~T[<span class="number">12</span><span class="symbol">:</span><span class="number">34</span><span class="symbol">:</span><span class="number">56.78</span>] ~T[<span class="number">12</span><span class="symbol">:</span><span class="number">34</span><span class="symbol">:</span><span class="number">56.78</span>]</span><br><span class="line">iex(<span class="number">37</span>)&gt; t1 == t2</span><br><span class="line"><span class="keyword">false</span></span><br><span class="line">iex(<span class="number">38</span>)&gt; inspect t2, <span class="symbol">structs:</span> <span class="keyword">false</span></span><br><span class="line"><span class="string">"&#123;:ok, %&#123;__struct__: Time, hour: 12, microsecond: &#123;780000, 2&#125;, minute: 34, second: 56&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
+<p>还有两种类型， DateTime 和 NaiveDateTime, Naive 版本的只是包含了一个日期和时间； DateTime 加入了 time zone 的相关属性。<br>第三方库 Calendar 也是很不错的。</p>
+<h3 id="Names-Source-Files-Conventions-Operators-and-So-On"><a href="#Names-Source-Files-Conventions-Operators-and-So-On" class="headerlink" title="Names, Source Files, Conventions, Operators, and So On"></a>Names, Source Files, Conventions, Operators, and So On</h3><p>Elixir 中变量命名跟其他语言类似，Module, record, protocol, and behavior 的命名需要用大写字母开头。其他的则是小写字母或者下划线开头。</p>
+<h3 id="Truth"><a href="#Truth" class="headerlink" title="Truth"></a>Truth</h3><p>三种： true, false, nil。在 Boolean 的上下文中，nil 和 false 类似。</p>
+<h3 id="Operators"><a href="#Operators" class="headerlink" title="Operators"></a>Operators</h3><p>Elixir 有许多 operators，下面举写例子：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a === b   <span class="comment"># strict  equality, 严格相等，类似 JavaScript，（ 1 === 1.0 is false )</span></span><br><span class="line">a !== b   <span class="comment"># strict inequality，严格不相等</span></span><br><span class="line">a == b    <span class="comment"># value equality ，值相等</span></span><br><span class="line">a != b    <span class="comment"># value inequality</span></span><br><span class="line">a &gt; b</span><br><span class="line">a &gt;= b</span><br><span class="line">a &lt; b</span><br><span class="line">a &lt;= b</span><br></pre></td></tr></table></figure>
+<p>如果类型相同，使用 自然顺序比较，否则使用下面的顺序：<br><code>number &lt; atom &lt; reference &lt; function &lt; port &lt; pid &lt; tuple &lt; map &lt; list &lt; binary</code></p>
+<h4 id="Boolean-operators"><a href="#Boolean-operators" class="headerlink" title="Boolean operators"></a>Boolean operators</h4><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a <span class="keyword">or</span> b          <span class="comment"># true if a is true, otherwise b</span></span><br><span class="line">a <span class="keyword">and</span> b         <span class="comment"># false if a is false, otherwise b</span></span><br><span class="line"><span class="keyword">not</span> a           <span class="comment"># false if a is true, true otherwise</span></span><br></pre></td></tr></table></figure>
+<h4 id="Relaxed-Boolean-operators"><a href="#Relaxed-Boolean-operators" class="headerlink" title="Relaxed Boolean operators"></a>Relaxed Boolean operators</h4><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a || b   <span class="comment"># a if a is truthy, otherwise b</span></span><br><span class="line">a &amp;&amp; b   <span class="comment"># b if a is truthy, otherwise b</span></span><br><span class="line">!a       <span class="comment"># false if a is truthy, otherwise true</span></span><br></pre></td></tr></table></figure>
+<h4 id="Arithmetic-operators"><a href="#Arithmetic-operators" class="headerlink" title="Arithmetic operators"></a>Arithmetic operators</h4><p><code>+ - * / div rem</code></p>
+<p>整数除法得到 浮点数 类型的结果，使用 div(a, b) 得到整型的结果<br>rem 是取余数操作，<code>rem(11, 3) =&gt; 2</code></p>
+<h4 id="Join-operators"><a href="#Join-operators" class="headerlink" title="Join operators"></a>Join operators</h4><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">binary1 &lt;&gt; binary2     <span class="comment">#binaries 合并</span></span><br><span class="line">list1 ++ list2         <span class="comment"># concatenates two lists</span></span><br><span class="line">list1 -- list2         <span class="comment"># removes elements of list2 from a copy of list 1</span></span><br></pre></td></tr></table></figure>
+<h4 id="The-in-opeator"><a href="#The-in-opeator" class="headerlink" title="The in opeator"></a>The in opeator</h4><p><code>a in enum</code><br>tests if a is included in enum (for example, a list, a range, a map), for maps, a should be a {key, value} tuple</p>
+<h3 id="Variable-Scope"><a href="#Variable-Scope" class="headerlink" title="Variable Scope"></a>Variable Scope</h3><p>Elixir 是基于词法作用域的。最基本的是以函数为单元，函数内定义的变量是属于这个函数局部的。另外 module 内的变量<br>只属于 module 这一层，module 内的函数无法访问。</p>
+<h4 id="The-with-Expression"><a href="#The-with-Expression" class="headerlink" title="The with Expression"></a>The with Expression</h4><p>with 表达式有两个作用，第一，为多个变量提供一个局部的作用域。第二，给你模式匹配失败后提供控制。</p>
+<p>比如：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># basic-types/with-scope.exs</span></span><br><span class="line"></span><br><span class="line">content = <span class="string">"Now is the time"</span></span><br><span class="line">lp = <span class="keyword">with</span> &#123;<span class="symbol">:ok</span>, file&#125; = File.open(<span class="string">"/etc/passwd"</span>), </span><br><span class="line">  content = IO.read(file, <span class="symbol">:all</span>),</span><br><span class="line">  <span class="symbol">:ok</span> = File.close(file),</span><br><span class="line">  [<span class="number">_</span>, uid, gid] = Regex.run(~r/<span class="symbol">_lp:</span>.*?<span class="symbol">:</span>(\d+)<span class="symbol">:</span>(\d+)/, content) </span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="string">"Group: <span class="subst">#&#123;gid&#125;</span>, User: <span class="subst">#&#123;uid&#125;</span>"</span> </span><br><span class="line"> <span class="keyword">end</span></span><br><span class="line">IO.puts lp <span class="comment">#=&gt; Group: 26, User: 26 </span></span><br><span class="line">IO.puts content <span class="comment">#=&gt; Now is the time</span></span><br></pre></td></tr></table></figure>
+<p>with 表达式让我们能高效的使用临时变量，正如上面的打开文件，读取文件，关闭文件，查找需要的行等。<br>with 的值为 do 表达式的值</p>
+<h4 id="with-and-Pattern-Matching"><a href="#with-and-Pattern-Matching" class="headerlink" title="with and Pattern Matching"></a>with and Pattern Matching</h4><p>在上面的例子中，with 表达式使用 <code>=</code> 来做模式匹配。如果匹配失败，会抛出一个 <code>MatchError</code> 异常。<br>当然我们可以使用更优雅的方式来处理，这就是 <code>&lt;-</code> 操作。当你使用 <code>&lt;-</code> 替代 <code>=</code>，匹配失败时，他会返回匹配失败的值。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; <span class="keyword">with</span> [ a | <span class="number">_</span> ] &lt;- [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>], <span class="symbol">do:</span> a</span><br><span class="line"><span class="number">1</span></span><br><span class="line">iex&gt; <span class="keyword">with</span> [ a | <span class="number">_</span> ] &lt;- <span class="keyword">nil</span>, <span class="symbol">do:</span> a</span><br><span class="line"><span class="keyword">nil</span></span><br></pre></td></tr></table></figure>
+<p>我们可以让 with 语句返回 nil，当匹配失败时：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># basic-types/with-match.exs</span></span><br><span class="line">result = <span class="keyword">with</span> &#123;<span class="symbol">:ok</span>, file&#125; = File.open(<span class="string">"/etc/passwd"</span>),</span><br><span class="line">  content = IO.read(file, <span class="symbol">:all</span>),</span><br><span class="line">  <span class="symbol">:ok</span> = File.close(file),</span><br><span class="line">  [<span class="number">_</span>, uid, gid] &lt;- Regex.run(~r/<span class="symbol">xxx:</span>.*?<span class="symbol">:</span>(\d+)<span class="symbol">:</span>(\d+)/, content)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  <span class="string">"Group: <span class="subst">#&#123;gid&#125;</span>, User: <span class="subst">#&#123;uid&#125;</span>"</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">IO.puts inspect(result) <span class="comment">#=&gt; nil</span></span><br></pre></td></tr></table></figure>
+<h4 id="A-minor-Gotcha"><a href="#A-minor-Gotcha" class="headerlink" title="A minor Gotcha"></a>A minor Gotcha</h4><p>Elixir 把 with 当做调用函数或者 macro。所以你不能这么做：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mean = <span class="keyword">with</span></span><br><span class="line">  count = Enum.count(values),</span><br><span class="line">  sum = Enum.sum(values)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  sum/count</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>你应该将第一个参数放到 with 那一行:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mean = <span class="keyword">with</span> count = Enum.count(values),</span><br><span class="line">  sum = Enum.sum(values)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  sum/count</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>或者使用括号：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mean = <span class="keyword">with</span>(</span><br><span class="line">  count = Enum.count(values),</span><br><span class="line">  sum   = Enum.sum(values)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  sum/count</span><br><span class="line"><span class="keyword">end</span>)</span><br><span class="line"></span><br><span class="line">和 <span class="keyword">do</span> 的其他用法一样，你也可以使用其简写：</span><br><span class="line"></span><br><span class="line">```elixir</span><br><span class="line">mean = <span class="keyword">with</span> count = Enum.count(values),</span><br><span class="line">        sum = Enum.sum(values),</span><br><span class="line">       <span class="symbol">do:</span> sum/count</span><br></pre></td></tr></table></figure>
+<h3 id="完"><a href="#完" class="headerlink" title="完"></a>完</h3>
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Immutability"><span class="toc-number">1.</span> <span class="toc-text">Immutability</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么需要-Immutable"><span class="toc-number">1.1.</span> <span class="toc-text">为什么需要 Immutable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Elixir-中的数据"><span class="toc-number">1.2.</span> <span class="toc-text">Elixir 中的数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不可变性对性能的影响"><span class="toc-number">1.3.</span> <span class="toc-text">不可变性对性能的影响</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Copying-Data"><span class="toc-number">1.3.1.</span> <span class="toc-text">Copying Data</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Garbage-Collection"><span class="toc-number">1.3.2.</span> <span class="toc-text">Garbage Collection</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编程中的不可变数据"><span class="toc-number">1.4.</span> <span class="toc-text">编程中的不可变数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Elixir-Basics"><span class="toc-number">2.</span> <span class="toc-text">Elixir Basics</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Built-in-Types"><span class="toc-number">2.1.</span> <span class="toc-text">Built-in Types</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Value-Type"><span class="toc-number">2.2.</span> <span class="toc-text">Value Type</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Integers"><span class="toc-number">2.2.1.</span> <span class="toc-text">Integers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Floating-Point-Numbers"><span class="toc-number">2.2.2.</span> <span class="toc-text">Floating-Point Numbers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Atoms"><span class="toc-number">2.2.3.</span> <span class="toc-text">Atoms</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Ranges"><span class="toc-number">2.2.4.</span> <span class="toc-text">Ranges</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Regular-Expressions"><span class="toc-number">2.2.5.</span> <span class="toc-text">Regular Expressions</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#System-Types"><span class="toc-number">2.3.</span> <span class="toc-text">System Types</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Collection-Types"><span class="toc-number">2.4.</span> <span class="toc-text">Collection Types</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Tuple"><span class="toc-number">2.4.1.</span> <span class="toc-text">Tuple</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Lists"><span class="toc-number">2.4.2.</span> <span class="toc-text">Lists</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Keyword-Lists"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">Keyword Lists</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Maps"><span class="toc-number">2.5.</span> <span class="toc-text">Maps</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Accessing-a-Map"><span class="toc-number">2.5.1.</span> <span class="toc-text">Accessing a Map</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Binaries"><span class="toc-number">2.6.</span> <span class="toc-text">Binaries</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dates-and-Times"><span class="toc-number">2.7.</span> <span class="toc-text">Dates and Times</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Names-Source-Files-Conventions-Operators-and-So-On"><span class="toc-number">2.8.</span> <span class="toc-text">Names, Source Files, Conventions, Operators, and So On</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Truth"><span class="toc-number">2.9.</span> <span class="toc-text">Truth</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Operators"><span class="toc-number">2.10.</span> <span class="toc-text">Operators</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Boolean-operators"><span class="toc-number">2.10.1.</span> <span class="toc-text">Boolean operators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Relaxed-Boolean-operators"><span class="toc-number">2.10.2.</span> <span class="toc-text">Relaxed Boolean operators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Arithmetic-operators"><span class="toc-number">2.10.3.</span> <span class="toc-text">Arithmetic operators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Join-operators"><span class="toc-number">2.10.4.</span> <span class="toc-text">Join operators</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-in-opeator"><span class="toc-number">2.10.5.</span> <span class="toc-text">The in opeator</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Variable-Scope"><span class="toc-number">2.11.</span> <span class="toc-text">Variable Scope</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#The-with-Expression"><span class="toc-number">2.11.1.</span> <span class="toc-text">The with Expression</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#with-and-Pattern-Matching"><span class="toc-number">2.11.2.</span> <span class="toc-text">with and Pattern Matching</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#A-minor-Gotcha"><span class="toc-number">2.11.3.</span> <span class="toc-text">A minor Gotcha</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#完"><span class="toc-number">2.12.</span> <span class="toc-text">完</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&text=elixir immutability and data type"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&title=elixir immutability and data type"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&is_video=false&description=elixir immutability and data type"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir immutability and data type&body=Check out this article: https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&title=elixir immutability and data type"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&title=elixir immutability and data type"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&title=elixir immutability and data type"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&title=elixir immutability and data type"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2017/12/20/elixir/2017-12-20-elixir-immutability/&name=elixir immutability and data type&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 lichengzhi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

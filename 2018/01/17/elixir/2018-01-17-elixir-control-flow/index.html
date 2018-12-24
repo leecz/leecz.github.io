@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Control Flow在函数式编程中，尽量使用 声明式，而不是指令式。 所以应该尽量少用 控制流。 if and unless12345iex&amp;gt; if 1 == 1, do: &quot;true part&quot;, else: &quot;false part&quot;true part&quot;iex&amp;gt; unless 1 == 1, do: &quot;error&quot;, else: &quot;OK&quot;&quot;OK&quot; condcond 是一种宏，让你">
+<meta name="keywords" content="elixir">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elixir control flow">
+<meta property="og:url" content="https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/index.html">
+<meta property="og:site_name" content="Chris Young&#39;s Blog">
+<meta property="og:description" content="Control Flow在函数式编程中，尽量使用 声明式，而不是指令式。 所以应该尽量少用 控制流。 if and unless12345iex&amp;gt; if 1 == 1, do: &quot;true part&quot;, else: &quot;false part&quot;true part&quot;iex&amp;gt; unless 1 == 1, do: &quot;error&quot;, else: &quot;OK&quot;&quot;OK&quot; condcond 是一种宏，让你">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-24T15:59:02.412Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="elixir control flow">
+<meta name="twitter:description" content="Control Flow在函数式编程中，尽量使用 声明式，而不是指令式。 所以应该尽量少用 控制流。 if and unless12345iex&amp;gt; if 1 == 1, do: &quot;true part&quot;, else: &quot;false part&quot;true part&quot;iex&amp;gt; unless 1 == 1, do: &quot;error&quot;, else: &quot;OK&quot;&quot;OK&quot; condcond 是一种宏，让你">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>elixir control flow</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&text=elixir control flow"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&title=elixir control flow"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&is_video=false&description=elixir control flow"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir control flow&body=Check out this article: https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&title=elixir control flow"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&title=elixir control flow"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&title=elixir control flow"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&title=elixir control flow"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&name=elixir control flow&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Control-Flow"><span class="toc-number">1.</span> <span class="toc-text">Control Flow</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#if-and-unless"><span class="toc-number">1.1.</span> <span class="toc-text">if and unless</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cond"><span class="toc-number">1.2.</span> <span class="toc-text">cond</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Case"><span class="toc-number">1.3.</span> <span class="toc-text">Case</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Raising-Exception"><span class="toc-number">1.4.</span> <span class="toc-text">Raising Exception</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Designing-with-Exceptions"><span class="toc-number">1.5.</span> <span class="toc-text">Designing with Exceptions</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        elixir control flow
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="name">Chris Young's Blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2018-01-17T14:56:26.000Z" itemprop="datePublished">2018-01-17</time>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/elixir/">elixir</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/elixir/">elixir</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Control-Flow"><a href="#Control-Flow" class="headerlink" title="Control Flow"></a>Control Flow</h2><p>在函数式编程中，尽量使用 声明式，而不是指令式。</p>
+<p>所以应该尽量少用 控制流。</p>
+<h3 id="if-and-unless"><a href="#if-and-unless" class="headerlink" title="if and unless"></a>if and unless</h3><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; if <span class="number">1</span> == <span class="number">1</span>, <span class="symbol">do:</span> <span class="string">"true part"</span>, <span class="symbol">else:</span> <span class="string">"false part</span></span><br><span class="line"><span class="string">"</span><span class="keyword">true</span> part<span class="string">"</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">iex&gt; unless 1 == 1, do: "</span>error<span class="string">", else: "</span>OK<span class="string">"</span></span><br><span class="line"><span class="string">"</span>OK<span class="string">"</span></span><br></pre></td></tr></table></figure>
+<h3 id="cond"><a href="#cond" class="headerlink" title="cond"></a>cond</h3><p>cond 是一种宏，让你列出一堆条件以及相连的处理代码。</p>
+<p>在 FizzBuzz 游戏中，从 1 开始数，如果被 3 整除，则说 Fizz，如果被 5 整除则说 Buzz，如果同时被 3 和 5 整除，则说 BizzBuzz，否则就说出这个数。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#control/fizzbuzz.ex</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">FizzBuzz</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">upto</span></span>(n) <span class="keyword">when</span> n &gt; <span class="number">0</span>, <span class="symbol">do:</span> _upto(<span class="number">1</span>, n, [])</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_upto</span></span>(_current, <span class="number">0</span>, result), <span class="symbol">do:</span> Enum.reverse result</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_upto</span></span>(current, left, result) <span class="keyword">do</span></span><br><span class="line">    next_answer = </span><br><span class="line">      <span class="keyword">cond</span> <span class="keyword">do</span></span><br><span class="line">        rem(current, <span class="number">3</span>) == <span class="number">0</span> <span class="keyword">and</span> rem(current, <span class="number">5</span>) == <span class="number">0</span> -&gt;</span><br><span class="line">          <span class="string">"FizzBuzz"</span></span><br><span class="line">        rem(current, <span class="number">3</span>) == <span class="number">0</span> -&gt;</span><br><span class="line">          <span class="string">"Fizz"</span></span><br><span class="line">        rem(current, <span class="number">5</span>) == <span class="number">0</span> -&gt; </span><br><span class="line">          <span class="string">"Buzz"</span></span><br><span class="line">        <span class="keyword">true</span> -&gt; </span><br><span class="line">          current</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">    _upto(current + <span class="number">1</span>, left - <span class="number">1</span>, [ next_answer | result ])</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>检验一下：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; c(<span class="string">"fizzbuzz.ex"</span>)</span><br><span class="line">iex&gt; FizzBuzz.upto(<span class="number">20</span>)</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="string">"Fizz"</span>, <span class="number">4</span>, <span class="string">"Buzz"</span>, <span class="string">"Fizz"</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="string">"Fizz"</span>, <span class="string">"Buzz"</span>, <span class="number">11</span>, <span class="string">"Fizz"</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="string">"FizzBuzz"</span>, <span class="number">16</span>, <span class="number">17</span>, <span class="string">"Fizz"</span>, <span class="number">19</span>, <span class="string">"Buzz"</span>]</span><br></pre></td></tr></table></figure>
+<p>优化一下，去掉 reverse 函数：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#control/fizzbuzz1.ex</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">FizzBuzz</span></span> <span class="keyword">do</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">upto</span></span>(n) <span class="keyword">when</span> n &gt; <span class="number">0</span>, <span class="symbol">do:</span> _downto(n, [])</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_downto</span></span>(<span class="number">0</span>, result), <span class="symbol">do:</span> result</span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_downto</span></span>(current, result) <span class="keyword">do</span></span><br><span class="line">    next_answer = </span><br><span class="line">      <span class="keyword">cond</span> <span class="keyword">do</span></span><br><span class="line">        rem(current, <span class="number">3</span>) == <span class="number">0</span> <span class="keyword">and</span> rem(current, <span class="number">5</span>) == <span class="number">0</span> -&gt;</span><br><span class="line">          <span class="string">"FizzBuzz"</span></span><br><span class="line">        rem(current, <span class="number">3</span>) == <span class="number">0</span> -&gt; </span><br><span class="line">          <span class="string">"Fizz"</span></span><br><span class="line">        rem(current, <span class="number">5</span>) == <span class="number">0</span> -&gt;</span><br><span class="line">          <span class="string">"Buzz"</span></span><br><span class="line">        <span class="keyword">true</span> -&gt; </span><br><span class="line">          current</span><br><span class="line">      <span class="keyword">end</span></span><br><span class="line">    _downto(current-<span class="number">1</span>, [next_answer | result ])</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>还是不够 elixir，</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># control/fizzbuzz2.ex</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">FizzBuzz</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">upto</span></span>(n) <span class="keyword">when</span> n &gt; <span class="number">0</span> <span class="keyword">do</span></span><br><span class="line">    <span class="number">1</span>..n |&gt; Enum.map(&amp;fizzbuzz/<span class="number">1</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">fizzbuzz</span></span>(n) <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">cond</span> <span class="keyword">do</span></span><br><span class="line">      rem(n, <span class="number">3</span>) ==  <span class="number">0</span> <span class="keyword">and</span> rem(n, <span class="number">5</span>) == <span class="number">0</span> -&gt;</span><br><span class="line">        <span class="string">"FizzBuzz"</span></span><br><span class="line">      rem(n, <span class="number">3</span>) == <span class="number">0</span> -&gt; </span><br><span class="line">        <span class="string">"Fizz"</span></span><br><span class="line">      rem(n, <span class="number">5</span>) == <span class="number">0</span> -&gt;</span><br><span class="line">        <span class="string">"Buzz"</span></span><br><span class="line">      <span class="keyword">true</span> -&gt; </span><br><span class="line">        n</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>以上只是为了说明 cond 的用法，如果不用 cond，代码可以更 elixir：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># control/fizzbuzz3.ex</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">FizzBuzz</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">upto</span></span>(n) <span class="keyword">when</span> n &gt; <span class="number">0</span>, <span class="symbol">do:</span> <span class="number">1</span>..n |&gt; Enum.map(&amp;fizzbuzz/<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">fizzbuzz</span></span>(n), <span class="symbol">do:</span> _fizzword(n, rem(n, <span class="number">3</span>), rem(n, <span class="number">5</span>))</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_fizzword</span></span>(_n, <span class="number">0</span>, <span class="number">0</span>), <span class="symbol">do:</span> <span class="string">"FizzBuzz"</span></span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_fizzword</span></span>(_n, <span class="number">0</span>, <span class="number">_</span>), <span class="symbol">do:</span> <span class="string">"Fizz"</span></span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_fizzword</span></span>(-n, <span class="number">_</span>, <span class="number">0</span>), <span class="symbol">do:</span> <span class="string">"buzz"</span></span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_fizzword</span></span>(n, <span class="number">_</span>, <span class="number">_</span>), <span class="symbol">do:</span> n</span><br></pre></td></tr></table></figure>
+<h3 id="Case"><a href="#Case" class="headerlink" title="Case"></a>Case</h3><p>case 道理跟其他语言类似，看语法吧：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> File.open(<span class="string">"case.ex"</span>) <span class="keyword">do</span></span><br><span class="line">  &#123; <span class="symbol">:ok</span>, file &#125; -&gt; </span><br><span class="line">    IO.puts <span class="string">"First line: <span class="subst">#&#123;IO.read(file, <span class="symbol">:line</span>)&#125;</span>"</span></span><br><span class="line">  &#123; <span class="symbol">:error</span>, reason &#125; -&gt;</span><br><span class="line">   IO.puts <span class="string">"Failed to open file: <span class="subst">#&#123;reason&#125;</span>"</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>嵌套匹配：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#control/case1.exs</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Users</span></span> <span class="keyword">do</span></span><br><span class="line">  dave = %&#123;<span class="symbol">name:</span> <span class="string">"Dave"</span>, <span class="symbol">state:</span> <span class="string">"TX"</span>, <span class="symbol">likes:</span> <span class="string">"programming"</span> &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> dave <span class="keyword">do</span></span><br><span class="line">    %&#123;<span class="symbol">state:</span> some_state&#125; = person -&gt; </span><br><span class="line">      IO.puts <span class="string">"<span class="subst">#&#123;person.name&#125;</span> lives in <span class="subst">#&#123;some_state&#125;</span>"</span></span><br><span class="line">    <span class="number">_</span> -&gt;</span><br><span class="line">      IO.puts <span class="string">"No matches"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>还可以加入保护语句:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">control/case2.exs</span><br><span class="line"></span><br><span class="line">dave = %&#123;<span class="symbol">name:</span> <span class="string">"Dave"</span>, <span class="symbol">age:</span> <span class="number">27</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">case</span> dave <span class="keyword">do</span></span><br><span class="line">  person = %&#123;<span class="symbol">age:</span> age&#125; <span class="keyword">when</span> is_number(age) <span class="keyword">and</span> age &gt;= <span class="number">21</span> -&gt;</span><br><span class="line">    IO.puts <span class="string">"You are cleared to enter the Foo Bar, <span class="subst">#&#123;person.name&#125;</span>"</span></span><br><span class="line">  <span class="number">_</span> -&gt; </span><br><span class="line">    IO.puts <span class="string">"Sorry, no admission"</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="Raising-Exception"><a href="#Raising-Exception" class="headerlink" title="Raising Exception"></a>Raising Exception</h3><p>首先，来自官方的提醒：异常在 Elixir 中并非控制流结构，只用于不在正常操作中出现的那些异常情况。比如数据库挂了，或者服务器无响应这类异常。<br>打开一个固定的文件失败可以是异常，但是如果文件名是用户输入的则不是异常。</p>
+<p>使用 raise 函数来抛出异常。最简单的，给它传个字符串，他会生成一个 RuntimeError 类型的异常。</p>
+<p><code>iex&gt; raise &quot;Giving up&quot;</code><br><code>** (RuntimeError) Giving up</code></p>
+<p>也可以指定异常的类型：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; raise RuntimeError</span><br><span class="line">** (RuntimeError) runtime error</span><br><span class="line">iex&gt; raise RuntimeError, <span class="symbol">message:</span> <span class="string">"override message"</span> </span><br><span class="line">** (RuntimeError) override message</span><br></pre></td></tr></table></figure>
+<p>总之，尽量少用！</p>
+<h3 id="Designing-with-Exceptions"><a href="#Designing-with-Exceptions" class="headerlink" title="Designing with Exceptions"></a>Designing with Exceptions</h3><p>如果打开文件成功，会返回 <code>{:ok, file}</code>, file 为访问的文件。如果失败，则返回 <code>{:error, reason}</code>。<br>所以打开文件可以这么写：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> File.open(user_file_name) <span class="keyword">do</span> </span><br><span class="line">  &#123;<span class="symbol">:ok</span>, file&#125; -&gt;</span><br><span class="line">    process(file) </span><br><span class="line">  &#123;<span class="symbol">:error</span>, message&#125; -&gt;</span><br><span class="line">    IO.puts <span class="symbol">:stderr</span>, <span class="string">"Couldn't open <span class="subst">#&#123;user_file_name&#125;</span>: <span class="subst">#&#123;message&#125;</span>"</span> </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>如果你期望文件总是能成功打开，你可以在失败时抛出异常：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> File.open(<span class="string">"config_file"</span>) <span class="keyword">do</span> </span><br><span class="line">  &#123;<span class="symbol">:ok</span>, file&#125; -&gt;</span><br><span class="line">    process(file) </span><br><span class="line">  &#123;<span class="symbol">:error</span>, message&#125; -&gt;</span><br><span class="line">    raise <span class="string">"Failed to open config file: <span class="subst">#&#123;message&#125;</span>"</span> </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>或者你可以让 Elixir 抛出异常<br><code>{:ok, file } = File.open(&quot;config_file&quot;)</code></p>
+<p>如果一开始的模式匹配失败，Elixir 会抛出 MatchError 的异常。这个异常的信息并不精确，但是也够用。</p>
+<p>如果你想抛出文件的异常，你可以：<br><code>file = File.open!(&quot;config_file&quot;)</code></p>
+<p>Elixir 中的约定，在函数后面加上 <code>!</code>，当函数调用发生错误时就会抛出异常。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Control-Flow"><span class="toc-number">1.</span> <span class="toc-text">Control Flow</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#if-and-unless"><span class="toc-number">1.1.</span> <span class="toc-text">if and unless</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cond"><span class="toc-number">1.2.</span> <span class="toc-text">cond</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Case"><span class="toc-number">1.3.</span> <span class="toc-text">Case</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Raising-Exception"><span class="toc-number">1.4.</span> <span class="toc-text">Raising Exception</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Designing-with-Exceptions"><span class="toc-number">1.5.</span> <span class="toc-text">Designing with Exceptions</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&text=elixir control flow"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&title=elixir control flow"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&is_video=false&description=elixir control flow"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir control flow&body=Check out this article: https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&title=elixir control flow"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&title=elixir control flow"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&title=elixir control flow"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&title=elixir control flow"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/01/17/elixir/2018-01-17-elixir-control-flow/&name=elixir control flow&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 lichengzhi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="翻译自 官方文档 一个 GemServer 有两个部分实现：client API 和 server callback。你可以将他们同时写入一个模块或者分开都可以。client 和 server 运行来不同的进程，client 和 server 来回地发送消息。 来创建一个文件 lib/kv/registry.ex ： 1234567891011121314151617181920212223242">
+<meta name="keywords" content="elixir">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elixir 中的 GenServer">
+<meta property="og:url" content="https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/index.html">
+<meta property="og:site_name" content="Chris Young&#39;s Blog">
+<meta property="og:description" content="翻译自 官方文档 一个 GemServer 有两个部分实现：client API 和 server callback。你可以将他们同时写入一个模块或者分开都可以。client 和 server 运行来不同的进程，client 和 server 来回地发送消息。 来创建一个文件 lib/kv/registry.ex ： 1234567891011121314151617181920212223242">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-24T15:59:21.481Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="elixir 中的 GenServer">
+<meta name="twitter:description" content="翻译自 官方文档 一个 GemServer 有两个部分实现：client API 和 server callback。你可以将他们同时写入一个模块或者分开都可以。client 和 server 运行来不同的进程，client 和 server 来回地发送消息。 来创建一个文件 lib/kv/registry.ex ： 1234567891011121314151617181920212223242">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>elixir 中的 GenServer</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/02/01/elixir/2018-02-02-elixir-supervisor/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/01/30/elixir/2018-01-30-elixir-processes/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&text=elixir 中的 GenServer"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&title=elixir 中的 GenServer"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&is_video=false&description=elixir 中的 GenServer"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir 中的 GenServer&body=Check out this article: https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&title=elixir 中的 GenServer"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&title=elixir 中的 GenServer"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&title=elixir 中的 GenServer"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&title=elixir 中的 GenServer"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&name=elixir 中的 GenServer&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#监控"><span class="toc-number">1.</span> <span class="toc-text">监控</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        elixir 中的 GenServer
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="name">Chris Young's Blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2018-02-01T14:56:26.000Z" itemprop="datePublished">2018-02-01</time>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/elixir/">elixir</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/elixir/">elixir</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>翻译自 官方文档</p>
+<p>一个 GemServer 有两个部分实现：client API 和 server callback。<br>你可以将他们同时写入一个模块或者分开都可以。client 和 server 运行来不同的进程，client 和 server 来回地发送消息。</p>
+<p>来创建一个文件 <code>lib/kv/registry.ex</code> ：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">KV.Registry</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> GenServer</span><br><span class="line"></span><br><span class="line">  <span class="comment">## Client API</span></span><br><span class="line">  <span class="variable">@doc</span> <span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">  Starts the registry.</span></span><br><span class="line"><span class="string">  "</span><span class="string">""</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">start_link</span></span>(opts) <span class="keyword">do</span></span><br><span class="line">    GenServer.start_link(__MODULE_<span class="number">_</span>, <span class="symbol">:ok</span>, opts)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="variable">@doc</span> <span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">  Looks up the bucket pid for `name` stored in `server`.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  Returns `&#123;:ok, pid&#125;` if the bucket exists, `:error` otherwise.</span></span><br><span class="line"><span class="string">  "</span><span class="string">""</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">lookup</span></span>(server, name) <span class="keyword">do</span></span><br><span class="line">    GenServer.call(server, &#123;<span class="symbol">:lookup</span>, name&#125;)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="variable">@doc</span> <span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">  Ensures there is a bucket associated with the given `name` in `server`.</span></span><br><span class="line"><span class="string">  "</span><span class="string">""</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">create</span></span>(server, name) <span class="keyword">do</span></span><br><span class="line">    GenServer.cast(server, &#123;<span class="symbol">:create</span>, name&#125;)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">## Server Callbacks</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">init</span></span>(<span class="symbol">:ok</span>) <span class="keyword">do</span></span><br><span class="line">    &#123;<span class="symbol">:ok</span>, %&#123;&#125;&#125;</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">handle_call</span></span>(&#123;<span class="symbol">:lookup</span>, name&#125;, _from, names) <span class="keyword">do</span></span><br><span class="line">    &#123;<span class="symbol">:reply</span>, Map.fetch(names, name), names&#125;</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">handle_cast</span></span>(&#123;<span class="symbol">:create</span>, name&#125;, names) <span class="keyword">do</span></span><br><span class="line">    if Map.has_key?(names, name) <span class="keyword">do</span></span><br><span class="line">      &#123;<span class="symbol">:noreply</span>, names&#125;</span><br><span class="line">    else</span><br><span class="line">      &#123;<span class="symbol">:ok</span>, bucket&#125; = KV.Bucket.start_link([])</span><br><span class="line">      &#123;<span class="symbol">:noreply</span>, Map.put(names, name, bucket)&#125;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>第一个函数 <code>start_link/1</code>，新建了一个 GenServer：</p>
+<ol>
+<li>server 回调定义的模块，<code>__MODULE__</code> 表示当前模块。</li>
+<li>初始化参数，这里是 <code>:ok</code>。</li>
+<li>一串选项值，列表类型，比如 name。</li>
+</ol>
+<p>可以向 GenServer 发送两种类型的请求： calls 和 casts。<br>Calls 是同步的，server 必须给出响应。<br>Casts 是异步的，server 不必给出响应。</p>
+<p><code>lookup/2</code> 和 <code>create/2</code> 负责将上述请求发送给 server。<br>这里各自使用 <code>{:lookup, name}</code> 和 <code>{:create, name}</code>。<br>请求通常使用 tuple 格式的参数。通常是先指定 action 接着是 action 的参数。<br>不过要注意要与 <code>handle_call/3</code> 或者 <code>handle_cast/2</code> 的参数匹配上。</p>
+<p>server 端则需要实现初始化、结束以及处理请求等等的回调函数。</p>
+<p>首先是 <code>init/1</code> 回调，接收 <code>GenServer.start_link/3</code> 这个的第二个参数，返回 <code>{:ok, state}</code>。<br>不难发现，GenServer 让 client 和 server 分开。<br><code>start_link/3</code> 是 client 的，<code>init/1</code> 是 server 的。</p>
+<p>对于 <code>call/2</code> 请求，我们实现一个 <code>handle_call/3</code> 函数来处理，接收参数为这个 request，接收请求的这个进程(<code>_form</code>)，当前的 server state（<code>names</code>）。<br><code>handle_call/3</code> 回调函数一个 tuple： <code>{:reply, reply, new_state}</code>。<code>:reply</code> 指明 server 需要给 client 一个 reply。<code>reply</code> 则是发送给 client 的内容，<code>new_state</code> 是 server 的新 state。</p>
+<p><code>cast/2</code> 请求，由 <code>handle_cast/2</code> 回调处理，接收参数为这个 request，和当前 server 的 state(<code>names</code>)。返回一个 tuple：<code>{:noreply, new_state}</code>。<br>注意在真实的应用中，我们一般为 <code>:create</code> 实现为同步而非异步。<br>还有 <code>terminate/2</code> 和 <code>code_change/3</code> 等内容，自己翻文档啊。</p>
+<h3 id="监控"><a href="#监控" class="headerlink" title="监控"></a>监控</h3><p><code>Process.monitor(pid)</code> 返回一个唯一的引用，让我们能匹配返回的信息。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Server callbacks</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">init</span></span>(<span class="symbol">:ok</span>) <span class="keyword">do</span></span><br><span class="line">  names = %&#123;&#125;</span><br><span class="line">  refs  = %&#123;&#125;</span><br><span class="line">  &#123;<span class="symbol">:ok</span>, &#123;names, refs&#125;&#125;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_call</span></span>(&#123;<span class="symbol">:lookup</span>, name&#125;, _from, &#123;names, <span class="number">_</span>&#125; = state) <span class="keyword">do</span></span><br><span class="line">  &#123;<span class="symbol">:reply</span>, Map.fetch(names, name), state&#125;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_cast</span></span>(&#123;<span class="symbol">:create</span>, name&#125;, &#123;names, refs&#125;) <span class="keyword">do</span></span><br><span class="line">  if Map.has_key?(names, name) <span class="keyword">do</span></span><br><span class="line">    &#123;<span class="symbol">:noreply</span>, &#123;names, refs&#125;&#125;</span><br><span class="line">  else</span><br><span class="line">    &#123;<span class="symbol">:ok</span>, pid&#125; = KV.Bucket.start_link([])</span><br><span class="line">    ref = Process.monitor(pid)</span><br><span class="line">    refs = Map.put(refs, ref, name)</span><br><span class="line">    names = Map.put(names, name, pid)</span><br><span class="line">    &#123;<span class="symbol">:noreply</span>, &#123;names, refs&#125;&#125;</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_info</span></span>(&#123;<span class="symbol">:DOWN</span>, ref, <span class="symbol">:process</span>, _pid, _reason&#125;, &#123;names, refs&#125;) <span class="keyword">do</span></span><br><span class="line">  &#123;name, refs&#125; = Map.pop(refs, ref)</span><br><span class="line">  names = Map.delete(names, name)</span><br><span class="line">  &#123;<span class="symbol">:noreply</span>, &#123;names, refs&#125;&#125;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_info</span></span>(_msg, state) <span class="keyword">do</span></span><br><span class="line">  &#123;<span class="symbol">:noreply</span>, state&#125;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#监控"><span class="toc-number">1.</span> <span class="toc-text">监控</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&text=elixir 中的 GenServer"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&title=elixir 中的 GenServer"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&is_video=false&description=elixir 中的 GenServer"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir 中的 GenServer&body=Check out this article: https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&title=elixir 中的 GenServer"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&title=elixir 中的 GenServer"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&title=elixir 中的 GenServer"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&title=elixir 中的 GenServer"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/02/01/elixir/2018-02-01-elixir-genserver/&name=elixir 中的 GenServer&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 lichengzhi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

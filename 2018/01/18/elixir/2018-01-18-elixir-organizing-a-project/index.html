@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Organizing a Project来看看真实的项目会接触到的东西。 The Project: Fetch Issues from GitHubgithub 提供了获取 issue 的 API，https://api.github.com/repos/user/project/issues 返回一个 JSON 的 list。我们来重新格式化它，然后取出历史最后几项，放到一个表中。    # c">
+<meta name="keywords" content="elixir">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elixir organizing a project">
+<meta property="og:url" content="https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/index.html">
+<meta property="og:site_name" content="Chris Young&#39;s Blog">
+<meta property="og:description" content="Organizing a Project来看看真实的项目会接触到的东西。 The Project: Fetch Issues from GitHubgithub 提供了获取 issue 的 API，https://api.github.com/repos/user/project/issues 返回一个 JSON 的 list。我们来重新格式化它，然后取出历史最后几项，放到一个表中。    # c">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-24T15:59:06.721Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="elixir organizing a project">
+<meta name="twitter:description" content="Organizing a Project来看看真实的项目会接触到的东西。 The Project: Fetch Issues from GitHubgithub 提供了获取 issue 的 API，https://api.github.com/repos/user/project/issues 返回一个 JSON 的 list。我们来重新格式化它，然后取出历史最后几项，放到一个表中。    # c">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>elixir organizing a project</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/01/30/elixir/2018-01-30-elixir-processes/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/01/17/elixir/2018-01-17-elixir-control-flow/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&text=elixir organizing a project"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&title=elixir organizing a project"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&is_video=false&description=elixir organizing a project"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir organizing a project&body=Check out this article: https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&title=elixir organizing a project"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&title=elixir organizing a project"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&title=elixir organizing a project"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&title=elixir organizing a project"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&name=elixir organizing a project&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Organizing-a-Project"><span class="toc-number">1.</span> <span class="toc-text">Organizing a Project</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Project-Fetch-Issues-from-GitHub"><span class="toc-number">1.1.</span> <span class="toc-text">The Project: Fetch Issues from GitHub</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#How-Our-Code-Will-Do-It"><span class="toc-number">1.1.1.</span> <span class="toc-text">How Our Code Will Do It</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Use-Mix-to-Create-Our-New-Project"><span class="toc-number">1.2.</span> <span class="toc-text">Task: Use Mix to Create Our New Project</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Create-the-Project-Tree"><span class="toc-number">1.2.1.</span> <span class="toc-text">Create the Project Tree</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transformation-Parse-the-Command-Line"><span class="toc-number">1.3.</span> <span class="toc-text">Transformation: Parse the Command Line</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-Write-Some-Basic-Tests"><span class="toc-number">1.4.</span> <span class="toc-text">Step: Write Some Basic Tests</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transformation-Fetch-from-GitHub"><span class="toc-number">1.5.</span> <span class="toc-text">Transformation: Fetch from GitHub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Use-Libraries"><span class="toc-number">1.6.</span> <span class="toc-text">Task; Use Libraries</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Finding-an-External-Library"><span class="toc-number">1.6.1.</span> <span class="toc-text">Finding an External Library</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Adding-a-Library-to-Your-Project"><span class="toc-number">1.6.2.</span> <span class="toc-text">Adding a Library to Your Project</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Back-to-the-Transformation"><span class="toc-number">1.6.3.</span> <span class="toc-text">Back to the Transformation</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transformation-Convert-Response"><span class="toc-number">1.7.</span> <span class="toc-text">Transformation: Convert Response</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Application-Configuration"><span class="toc-number">1.7.1.</span> <span class="toc-text">Application Configuration</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transformation-Sort-Data"><span class="toc-number">1.8.</span> <span class="toc-text">Transformation: Sort Data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transformation-Take-First-n-Items"><span class="toc-number">1.9.</span> <span class="toc-text">Transformation: Take First n Items</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transformation-Format-the-Table"><span class="toc-number">1.10.</span> <span class="toc-text">Transformation: Format the Table</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Make-a-Command-Line-Executable"><span class="toc-number">1.11.</span> <span class="toc-text">Task: Make a Command-Line Executable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Add-Some-Logging"><span class="toc-number">1.12.</span> <span class="toc-text">Task: Add Some Logging</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Create-Project-Documentation"><span class="toc-number">1.13.</span> <span class="toc-text">Task: Create Project Documentation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Coding-by-Transforming-Data"><span class="toc-number">1.14.</span> <span class="toc-text">Coding by Transforming Data</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        elixir organizing a project
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="name">Chris Young's Blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2018-01-18T14:56:26.000Z" itemprop="datePublished">2018-01-18</time>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/elixir/">elixir</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/elixir/">elixir</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Organizing-a-Project"><a href="#Organizing-a-Project" class="headerlink" title="Organizing a Project"></a>Organizing a Project</h2><p>来看看真实的项目会接触到的东西。</p>
+<h3 id="The-Project-Fetch-Issues-from-GitHub"><a href="#The-Project-Fetch-Issues-from-GitHub" class="headerlink" title="The Project: Fetch Issues from GitHub"></a>The Project: Fetch Issues from GitHub</h3><p>github 提供了获取 issue 的 API，<br><code>https://api.github.com/repos/user/project/issues</code></p>
+<p>返回一个 JSON 的 list。我们来重新格式化它，然后取出历史最后几项，放到一个表中。</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>created_at</th>
+<th>title</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>889</td>
+<td>2013-03-16T22:03:13Z</td>
+<td>MIX_PATH environment variable (of sorts)</td>
+</tr>
+<tr>
+<td>892</td>
+<td>2013-03-20T19:22:07Z</td>
+<td>Enhanced mix test –cover</td>
+</tr>
+<tr>
+<td>893</td>
+<td>2013-03-21T06:23:00Z</td>
+<td>mix test time reports</td>
+</tr>
+<tr>
+<td>898</td>
+<td>2013-03-23T19:19:08Z</td>
+<td>Add mix compile –warnings-as-errors</td>
+</tr>
+</tbody>
+</table>
+<h4 id="How-Our-Code-Will-Do-It"><a href="#How-Our-Code-Will-Do-It" class="headerlink" title="How Our Code Will Do It"></a>How Our Code Will Do It</h4><p>程序会运行在命令行。需要传入一个 github 的账号，项目名等。所以需要一些基本的命令行参数解析。<br>需要通过 HTTP 访问 Github，所以我们需要一个能发送请求的 http 客户端。请求返回结果是 JSON 格式的，所以需要一个处理 JSON 的库。<br>所以简单的流程可以概括为：解析命令行参数，发送请求，解析返回结果，排序，筛选数据，格式化数据，放入表格。</p>
+<h3 id="Task-Use-Mix-to-Create-Our-New-Project"><a href="#Task-Use-Mix-to-Create-Our-New-Project" class="headerlink" title="Task: Use Mix to Create Our New Project"></a>Task: Use Mix to Create Our New Project</h3><p>Mix 为管理 Elixir 项目的命令行工具。可以使用它来创建项目，管理项目依赖，执行测试，运行代码等。<br>如果你已经安装了 Elixir，mix 也就随 Elixir 一起安装了。<br>查看帮助： <code>$ mix help</code><br>你会看到 mix 的各种命令，比如<code>archive,new,run,test...</code>等等等等。<br>当然你还可以创建自己的命令。</p>
+<h4 id="Create-the-Project-Tree"><a href="#Create-the-Project-Tree" class="headerlink" title="Create the Project Tree"></a>Create the Project Tree</h4><p>创建项目，名为 issues。<br><code>$ mix new issues</code><br><code>$ cd issues</code></p>
+<p>这里又几个重要的文件和目录</p>
+<ul>
+<li>config/ 顾名思义，整个应用的配置</li>
+<li>lib/  我们写代码的地方</li>
+<li>mix.exs 项目的配置选项</li>
+</ul>
+<h3 id="Transformation-Parse-the-Command-Line"><a href="#Transformation-Parse-the-Command-Line" class="headerlink" title="Transformation: Parse the Command Line"></a>Transformation: Parse the Command Line</h3><p>一般我们都会把命令行参数解析这类工作单独出来成一个模块，按照 Elixir 中的约定，模块一般命名为 ‘Project.CLI’，所以这里为 ‘Issues.CLI’ 。模块的入口一般是 run 函数。<br>按照约定，代码放在 lib 目录，在 lib 目录下创建一个和项目名相同的子目录（这里是 lib/issues/）。这个目录放项目源码，一个文件一个模块。<br>我们的 <code>Issues.CLI</code> 模块对应的文件就是，issues目录下的<code>cli.ex</code>文件。</p>
+<p>所以现在的文件结构应该是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lib</span><br><span class="line">|____issues</span><br><span class="line">|    |_____cli.ex</span><br><span class="line">|____issues.ex</span><br></pre></td></tr></table></figure>
+<p>Elixir 接收命令行参数，第一个参数为 keyword list，存储选项，第二个参数为一个 list，保存剩下的参数。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#issues/lib/issues/cli.ex</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Issues.CLI</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="variable">@default_count</span> <span class="number">4</span></span><br><span class="line">  <span class="variable">@moduledoc</span> <span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">    Handle the command line parsing and the dispatch to</span></span><br><span class="line"><span class="string">    the various functions that end up generating a </span></span><br><span class="line"><span class="string">    table of the last _n_ issues in a github project</span></span><br><span class="line"><span class="string">  "</span><span class="string">""</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">run</span></span>(argv) <span class="keyword">do</span></span><br><span class="line">    parse_args(argv)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="variable">@doc</span> <span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">    `argv` can be -h or --help, which returns :help.</span></span><br><span class="line"><span class="string">    Otherwise it is a github user name, project name, and (optionally)</span></span><br><span class="line"><span class="string">    the number of entries to format.</span></span><br><span class="line"><span class="string">    Return a tuple of `&#123; user, project, count &#125;`, or `:help` if help was given.</span></span><br><span class="line"><span class="string">  "</span><span class="string">""</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">parse_args</span></span>(argv) <span class="keyword">do</span></span><br><span class="line">    parse = OptionParser.parse(argv, <span class="symbol">switches:</span> [ <span class="symbol">help:</span> <span class="symbol">:boolean</span>], <span class="symbol">aliases:</span> [<span class="symbol">h:</span> <span class="symbol">:help</span>])</span><br><span class="line">    <span class="keyword">case</span> parse <span class="keyword">do</span></span><br><span class="line">      &#123; [ <span class="symbol">help:</span> <span class="keyword">true</span> ], <span class="number">_</span>, <span class="number">_</span> &#125;</span><br><span class="line">        -&gt; <span class="symbol">:help</span></span><br><span class="line">      &#123; <span class="number">_</span>, [ user, project, count ], <span class="number">_</span> &#125;</span><br><span class="line">        -&gt; &#123; user, project, count &#125;</span><br><span class="line">      &#123; <span class="number">_</span>, [ user, project ], <span class="number">_</span> &#125;</span><br><span class="line">        -&gt; &#123; user, project, <span class="variable">@default_count</span> &#125;</span><br><span class="line">      <span class="number">_</span> -&gt; <span class="symbol">:help</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="Step-Write-Some-Basic-Tests"><a href="#Step-Write-Some-Basic-Tests" class="headerlink" title="Step: Write Some Basic Tests"></a>Step: Write Some Basic Tests</h3><p>没写测试总是心里没底。好在 Elixir 有个非常帮的测试框架 ExUnit。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># issues/test/issues_test.exs</span></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">IssuesTest</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> ExUnit.Case</span><br><span class="line">    doctest Issues</span><br><span class="line">    test <span class="string">"the truth"</span> <span class="keyword">do</span></span><br><span class="line">      assert <span class="number">1</span> + <span class="number">1</span> == <span class="number">2</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>上面就是测试的一般写法。</p>
+<p>来写写 CLI 模块的测试：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /issues/test/cli_test.exs</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">CliTest</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> ExUnit.Case</span><br><span class="line">  doctest Issues</span><br><span class="line"></span><br><span class="line">  <span class="keyword">import</span> Issues.CLI, <span class="symbol">only:</span> [<span class="symbol">parse_args:</span> <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">  test <span class="string">":help returned by option parsing with -h and --help options"</span> <span class="keyword">do</span> </span><br><span class="line">    assert parse_args([<span class="string">"-h"</span>, <span class="string">"anything"</span>]) == <span class="symbol">:help</span></span><br><span class="line">    assert parse_args([<span class="string">"--help"</span>, <span class="string">"anything"</span>]) == <span class="symbol">:help</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  test <span class="string">"three values returned if three given"</span> <span class="keyword">do</span></span><br><span class="line">    assert parse_args([<span class="string">"user"</span>, <span class="string">"project"</span>, <span class="string">"99"</span>]) == &#123; <span class="string">"user"</span>, <span class="string">"project"</span>, <span class="number">99</span> &#125;</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  test <span class="string">"count is defaulted if two values given"</span> <span class="keyword">do</span></span><br><span class="line">    assert parse_args([<span class="string">"user"</span>, <span class="string">"project"</span>]) == &#123; <span class="string">"user"</span>, <span class="string">"project"</span>, <span class="number">4</span> &#125;</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>这里的测试都使用了 ExUnit 提供的宏 assert。理解起来简单，如果断言失败，就会打印详细的错误信息。<br><code>$ mix test</code> 就可以跑测试了。</p>
+<p>假装已经跑了，从错误信息中可以看到有个地方出错了，我们改下程序就好了，具体哪错了，自己去试下就知道了啊。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_args</span></span>(argv) <span class="keyword">do</span></span><br><span class="line">  parse = OptionParser.parse(argv, <span class="symbol">switches:</span> [ <span class="symbol">help:</span> <span class="symbol">:boolean</span>], <span class="symbol">aliases:</span> [ <span class="symbol">h:</span> <span class="symbol">:help</span> ])</span><br><span class="line">  <span class="keyword">case</span> parse <span class="keyword">do</span></span><br><span class="line">    &#123; [ <span class="symbol">help:</span> <span class="keyword">true</span> ], <span class="number">_</span>, <span class="number">_</span> &#125; -&gt; <span class="symbol">:help</span></span><br><span class="line">    &#123; <span class="number">_</span>, [ user, project, count ], <span class="number">_</span> &#125; -&gt; &#123; user, project,</span><br><span class="line">    &#123; <span class="number">_</span>, [ user, project ], <span class="number">_</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="Transformation-Fetch-from-GitHub"><a href="#Transformation-Fetch-from-GitHub" class="headerlink" title="Transformation: Fetch from GitHub"></a>Transformation: Fetch from GitHub</h3><p>继续，可以解析参数了，我们需要用这些信息来获取 GitHub 的数据。<br>我们来扩展 run 函数，加入 process 函数来处理得到的参数：<code>process(parse_args(argv))</code><br>不过这有点不那么 elixir，</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># lib/issues/cli.ex</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">run</span></span>(argv) <span class="keyword">do</span></span><br><span class="line">  argv</span><br><span class="line">  |&gt; parse_args</span><br><span class="line">  |&gt; process</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>我们需要两个 process 函数的变种，一个用来处理 <code>:help</code> 参数，另一个用来处理 用户的 github 信息。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># lib/issues/cli.ex</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process</span></span>(<span class="symbol">:help</span>) <span class="keyword">do</span></span><br><span class="line">  IO.puts <span class="string">""</span><span class="string">"</span></span><br><span class="line"><span class="string">    usage: issues &lt;user&gt; &lt;project&gt; [ count | <span class="subst">#&#123;<span class="variable">@default_count</span>&#125;</span> ]</span></span><br><span class="line"><span class="string">  "</span><span class="string">""</span></span><br><span class="line">  System.halt(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process</span></span>(&#123;user, project, _count&#125;) <span class="keyword">do</span> </span><br><span class="line">  Issues.GithubIssues.fetch(user, project)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>可以在命令行直接执行我们的函数<br><code>$ mix run -e &#39;Issues.CLI.run([&quot;-h&quot;])&#39;</code></p>
+<h3 id="Task-Use-Libraries"><a href="#Task-Use-Libraries" class="headerlink" title="Task; Use Libraries"></a>Task; Use Libraries</h3><p>Elixir 中有很多内库，有 Elixir 写的，也有 Erlang 写的。<br>欢迎到官网的文档中查看。</p>
+<h4 id="Finding-an-External-Library"><a href="#Finding-an-External-Library" class="headerlink" title="Finding an External Library"></a>Finding an External Library</h4><p>Elixir 有 hex。第三方包管理器。</p>
+<p>可以在这上面找 <a href="https://hex.pm/" target="_blank" rel="noopener">https://hex.pm/</a>你想要的包，找不到的话使用 Google 和 Github 吧。</p>
+<p>这里我们需要一个 http client，没有 Elixir 内置的，所以我们用第三方的，就你了 HTTPoison。</p>
+<h4 id="Adding-a-Library-to-Your-Project"><a href="#Adding-a-Library-to-Your-Project" class="headerlink" title="Adding a Library to Your Project"></a>Adding a Library to Your Project</h4><p>用过 npm 和 gem 的都知道咋添加依赖，Elixir 类似。<br>Elixir 中的依赖配置文件就是<code>mix.exs</code></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mix.exs</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">defp</span> <span class="title">deps</span></span> <span class="keyword">do</span></span><br><span class="line">  [ </span><br><span class="line">    &#123;<span class="symbol">:httpoison</span>, <span class="string">"~&gt; 0.9"</span> &#125;</span><br><span class="line">  ]</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>$ mix deps</code> 查看依赖<br>使用 <code>$ mix deps.get</code> 下载依赖包</p>
+<h4 id="Back-to-the-Transformation"><a href="#Back-to-the-Transformation" class="headerlink" title="Back to the Transformation"></a>Back to the Transformation</h4><p>回到我们的问题。我们需要写一个函数 <code>GithubIssues.fetch</code>，根据参数获取我们需要的 issues。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># lib/issues/github_issues.ex</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Issues.GithubIssues</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="variable">@user_agent</span> [ &#123;<span class="string">"User-agent"</span>, <span class="string">"Elixir dave@pragprog.com&#125;]</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  def fetch(user, project) do</span></span><br><span class="line"><span class="string">    issues_url(user, project)</span></span><br><span class="line"><span class="string">    |&gt; HTTPoison.get(@user_agent)</span></span><br><span class="line"><span class="string">    |&gt; handle_response</span></span><br><span class="line"><span class="string">  end</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">  def issues_url(user, project) do</span></span><br><span class="line"><span class="string">    "</span><span class="symbol">https:</span>/<span class="regexp">/api.github.com/repos</span><span class="regexp">/<span class="subst">#&#123;user&#125;</span>/</span><span class="comment">#&#123;project&#125;/issues"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">handle_response</span></span>(&#123; <span class="symbol">:ok</span>, %&#123;<span class="symbol">status_code:</span> <span class="number">200</span>, <span class="symbol">body:</span> body&#125;&#125;) <span class="keyword">do</span></span><br><span class="line">    &#123; <span class="symbol">:ok</span>, body &#125;</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">handle_response</span></span>(&#123; <span class="number">_</span>, %&#123;<span class="symbol">status_code:</span> <span class="number">_</span>, <span class="symbol">body:</span> body&#125;&#125;) <span class="keyword">do</span></span><br><span class="line">    &#123; <span class="symbol">:error</span>, body &#125;</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>在 HTTPoison 的文档里，得先执行 <code>HTTPoison.start</code>，那是因为它是单独运行，而在我们的程序中不必如此。</p>
+<p>我们可以在 <code>mix.exs</code> 中配置它，让它自动启动:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mix.exs</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">application</span></span> <span class="keyword">do</span></span><br><span class="line">  [<span class="symbol">extra_applications:</span> [<span class="symbol">:logger</span>, <span class="symbol">:httpoison</span>]]</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>简单介绍下 OTP 框架，OTP 用来管理整套运行的程序。application 函数配置配套程序的内容。<br>默认只有 Elixir 的 logger，我们可以添加我们自己的，这里我们加入了 httpoison。</p>
+<p>我们可以在命令行跑这段程序了。<br><code>$ iex -S mix</code><br><code>iex&gt; Issues.GithubIssues.fetch(&quot;elixir-lang&quot;, &quot;elixir&quot;)</code></p>
+<p>然后就可以看到请求的响应。</p>
+<h3 id="Transformation-Convert-Response"><a href="#Transformation-Convert-Response" class="headerlink" title="Transformation: Convert Response"></a>Transformation: Convert Response</h3><p>我们还需要一个解析 JSON 的库。<br>继续去 <code>hex.pm</code> 搜，这个 poison 不错，加入依赖。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mix.exs</span></span><br><span class="line"><span class="function"><span class="keyword">defp</span> <span class="title">deps</span></span> <span class="keyword">do</span> </span><br><span class="line">  [</span><br><span class="line">    <span class="symbol">httpoison:</span> <span class="string">"~&gt; 0.9"</span>,</span><br><span class="line">    <span class="symbol">poison:</span>    <span class="string">"~&gt; 2.2"</span></span><br><span class="line">  ]</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>执行 <code>mix deps.get</code>，就安装了 poison 了。</p>
+<p>然后开始写转化响应结果的代码：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># project/3/issues/lib/issues/github_issues.ex</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_response</span></span>(&#123;<span class="symbol">:ok</span>, %&#123;<span class="symbol">status_code:</span> <span class="number">200</span>, <span class="symbol">body:</span> body&#125;&#125;) <span class="keyword">do</span> </span><br><span class="line">  &#123; <span class="symbol">:ok</span>, Poison.Parser.parse!(body) &#125;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">handle_response</span></span>(&#123;<span class="number">_</span>, %&#123;<span class="symbol">status_code:</span> <span class="number">_</span>, <span class="symbol">body:</span> body&#125;&#125;) <span class="keyword">do</span></span><br><span class="line">  &#123; <span class="symbol">:error</span>, Poison.Parser.parse!(body) &#125;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>我们得处理下 fetch 可能出现的异常，回到 CLI 模块，写解析响应的函数。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cli.ex</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process</span></span>(&#123;user, project, _count&#125;) <span class="keyword">do</span></span><br><span class="line">  Issues.GithubIssues.fetch(user, project)</span><br><span class="line">  |&gt; decode_response</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decode_response</span></span>(&#123;<span class="symbol">:ok</span>, body&#125;), <span class="symbol">do:</span> body</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decode_response</span></span>(&#123;<span class="symbol">:error</span>, error&#125;) <span class="keyword">do</span></span><br><span class="line">  &#123;<span class="number">_</span>, message&#125; = List.keyfind(error, <span class="string">"message"</span>, <span class="number">0</span>)</span><br><span class="line">  IO.puts <span class="string">"Error fetching from Github: <span class="subst">#&#123;message&#125;</span>"</span></span><br><span class="line">  System.halt(<span class="number">2</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h4 id="Application-Configuration"><a href="#Application-Configuration" class="headerlink" title="Application Configuration"></a>Application Configuration</h4><p>我们的 <code>issues_url</code> 是硬编码的，这个不太符合软件工程学。<br>最好是做成可配置的。</p>
+<p>文件 <code>config/config.exs</code> 就是用来做这方面的配置。</p>
+<p>加入<br><code>config :issues, github_url: &quot;https://api.github.com&quot;</code></p>
+<p>一个 config 行可以添加 一个 或 多个 键值对，这是 environment 相关的。</p>
+<p>在代码中获取配置值：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># lib/issues/github_issues.ex</span></span><br><span class="line"><span class="variable">@github_url</span> Application.get_env(<span class="symbol">:issues</span>, <span class="symbol">:github_url</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">issues_url</span></span>(user, project) <span class="keyword">do</span></span><br><span class="line">  <span class="string">"<span class="subst">#&#123;<span class="variable">@github_url</span>&#125;</span>/repos/<span class="subst">#&#123;user&#125;</span>/<span class="subst">#&#123;project&#125;</span>/issues"</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>environment 在 Erlang 代码中广泛存在。ruby 也是。<br>如果想根据应用的环境来做不同的配置，方法一 使用 <code>import_config</code> </p>
+<p><code>import_config &quot;#{Mix.env}&quot;</code></p>
+<p>这样就可以根据环境来读取配置文件，比如 <code>dev.exs, test.exs, prod.exs</code>等。</p>
+<h3 id="Transformation-Sort-Data"><a href="#Transformation-Sort-Data" class="headerlink" title="Transformation: Sort Data"></a>Transformation: Sort Data</h3><p>下面，我们要对获取的数据按 <code>created_at</code> 来排序。排序可以使用 Elixir 中的 <code>sort/2</code>方法。<br>可以单独一个模块，不过这里偷个懒，直接写在 CLI 模块吧。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process</span></span>(&#123;user, project, count&#125;) <span class="keyword">do</span></span><br><span class="line">  Issues.GithubIssues.fetch(user, project)</span><br><span class="line">  |&gt; decode_response</span><br><span class="line">  |&gt; sort_into_ascending_order</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sort_into_ascending_order</span></span>(list_of_issues) <span class="keyword">do</span></span><br><span class="line">  Enum.sort list_of_issues, <span class="keyword">fn</span> i1, i2 -&gt; Map.get(i1, <span class="string">"created_at"</span>) &lt;= Map.get(i2, <span class="string">"created_at"</span>) <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>写个测试：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cli_test.exs</span></span><br><span class="line">test <span class="string">"sort ascending orders the correct way"</span> <span class="keyword">do</span></span><br><span class="line">  result = sort_into_ascending_order(fake_created_at_list([<span class="string">"c"</span>, <span class="string">"a"</span>, <span class="string">"b"</span>])) </span><br><span class="line">  issues = <span class="keyword">for</span> issue &lt;- result, <span class="symbol">do:</span> Map.get(issue, <span class="string">"created_at"</span>)</span><br><span class="line">  assert issues == ~w&#123;a b c&#125;</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="function"><span class="keyword">defp</span> <span class="title">fake_created_at_list</span></span>(values) <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">for</span> value &lt;- values,</span><br><span class="line">  <span class="symbol">do:</span> %&#123;<span class="string">"created_at"</span> =&gt; value, <span class="string">"other_data"</span> =&gt; <span class="string">"xxx"</span>&#125;</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>记得在测试文件中 引入要测试的方法 <code>import Issues.CLI, only: [ parse_args: 1, sort_into_ascending_order: 1 ]</code></p>
+<p>运行： <code>$ mix test</code></p>
+<h3 id="Transformation-Take-First-n-Items"><a href="#Transformation-Take-First-n-Items" class="headerlink" title="Transformation: Take First n Items"></a>Transformation: Take First n Items</h3><p>然后选取我们指定数量的记录：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process</span></span>(&#123;user, project, count&#125;) <span class="keyword">do</span> </span><br><span class="line">  Issues.GithubIssues.fetch(user, project) </span><br><span class="line">  |&gt; decode_response</span><br><span class="line">  |&gt; sort_into_ascending_order</span><br><span class="line">  |&gt; Enum.take(count)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="Transformation-Format-the-Table"><a href="#Transformation-Format-the-Table" class="headerlink" title="Transformation: Format the Table"></a>Transformation: Format the Table</h3><p>最后要放入表中：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process</span></span>(&#123;user, project, count&#125;) <span class="keyword">do</span> </span><br><span class="line">  Issues.GithubIssues.fetch(user, project)</span><br><span class="line">  |&gt; decode_response</span><br><span class="line">  |&gt; sort_into_ascending_order</span><br><span class="line">  |&gt; Enum.take(count)</span><br><span class="line">  |&gt; print_table_for_columns([<span class="string">"number"</span>, <span class="string">"created_at"</span>, <span class="string">"title"</span>])</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>需要给 <code>print_table_for_columns</code> 传入列名。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># table_formatter.ex</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Issues.TableFormatter</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">import</span> Enum, <span class="symbol">only:</span> [<span class="symbol">each:</span> <span class="number">2</span>, <span class="symbol">map:</span> <span class="number">2</span>, <span class="symbol">map_join:</span> <span class="number">3</span>, <span class="symbol">max:</span> <span class="number">1</span>]</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">print_table_for_columns</span></span>(rows, headers) <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">with</span> data_by_columns = split_into_columns(rows, headers),</span><br><span class="line">         column_widths = widths_of(data_by_columns),</span><br><span class="line">         format = format_for(column_widths)</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        puts_one_line_in_columns(headers, format)</span><br><span class="line">        IO.puts(separator(column_widths))</span><br><span class="line">        puts_in_columns(data_by_columns, format)</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">split_into_columns</span></span>(rows, headers) <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">for</span> header &lt;- headers <span class="keyword">do</span></span><br><span class="line">      <span class="keyword">for</span> row &lt;- rows, <span class="symbol">do:</span> printable(row[header])</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">printable</span></span>(str) <span class="keyword">when</span> is_binary(str), <span class="symbol">do:</span> str</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">printable</span></span>(str), <span class="symbol">do:</span> to_string(str)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">widths_of</span></span>(columns) <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">for</span> column &lt;- columns, <span class="symbol">do:</span> column |&gt; map(&amp;String.length/<span class="number">1</span>) |&gt; max</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">format_for</span></span>(column_widths) <span class="keyword">do</span></span><br><span class="line">    map_join(column_widths, <span class="string">" | "</span>, <span class="keyword">fn</span> width -&gt; <span class="string">"~-<span class="subst">#&#123;width&#125;</span>s"</span> <span class="keyword">end</span>) &lt;&gt; <span class="string">"~n"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">separator</span></span>(column_widths) <span class="keyword">do</span></span><br><span class="line">    map_join(column_widths, <span class="string">"-+-"</span>, <span class="keyword">fn</span> width -&gt; List.duplicate(<span class="string">"-"</span>, width) <span class="keyword">end</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">puts_in_columns</span></span>(data_by_columns, format) <span class="keyword">do</span> </span><br><span class="line">    data_by_columns</span><br><span class="line">    |&gt; List.zip</span><br><span class="line">    |&gt; map(&amp;Tuple.to_list/<span class="number">1</span>)</span><br><span class="line">    |&gt; each(&amp;puts_one_line_in_columns(&amp;<span class="number">1</span>, format))</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">puts_one_line_in_columns</span></span>(fields, format) <span class="keyword">do</span> </span><br><span class="line">    <span class="symbol">:io</span>.format(format, fields)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>这个测试要花点时间写，按住不表。<br>在 <code>cli.ex</code> 中引入这个函数<br><code>import Issues.TableFormatter, only: [ print_table_for_columns: 2 ]</code></p>
+<h3 id="Task-Make-a-Command-Line-Executable"><a href="#Task-Make-a-Command-Line-Executable" class="headerlink" title="Task: Make a Command-Line Executable"></a>Task: Make a Command-Line Executable</h3><p>直接使用 <code>mix run</code> 不太友好，我们来让它可以在命令行中跑。</p>
+<p>Mix 可以将我们的代码各种依赖打包为一个文件，可以在各种任何 类 Unix 平台运行。<br>使用 Erlang 的 escript 工具，可以运行已经编译的zip打包的程序。</p>
+<p>escript 运行程序的时候，会先找 <code>mix.exs</code> 文件中的 escript 选项。<br>这个选项需要返回一个关键字列表，包含 escript 的配置信息。最主要的一个配置是 <code>main_module</code>，指向有 main 方法的那个模块。<br>命令行参数也会传递到这个函数，类型为字符列表。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">project</span></span> <span class="keyword">do</span></span><br><span class="line">  [</span><br><span class="line">    ...</span><br><span class="line">    <span class="symbol">escript:</span> escript_config</span><br><span class="line">    ...</span><br><span class="line">  ]</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">defp</span> <span class="title">escript_config</span></span> <span class="keyword">do</span></span><br><span class="line">  [ <span class="symbol">main_module:</span> Issues.CLI ]  </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>还需要一个 main 方法，把 之前的 run 方法直接改名为 main 即可。</p>
+<p>然后打包：<code>$ mix escript.build</code></p>
+<p>然后就可以在有 Erlang 的环境中运行，<code>$ ./issues elixir-lang elixir 3</code></p>
+<p>…</p>
+<h3 id="Task-Add-Some-Logging"><a href="#Task-Add-Some-Logging" class="headerlink" title="Task: Add Some Logging"></a>Task: Add Some Logging</h3><p>想象一下，如果一个 Elixir 应用很大，数不清的进程运行在数不清的节点上。要怎么才能知道那些重要的事件是否正常？打印日志。<br>在 <code>mix.exs</code> 中，已经默认开启了 logger 功能。<br>logger 支持4个层级的消息，<code>debug, info, warn, and error</code>。</p>
+<p>你有两种设置日志级别的方式，第一，在编译期设置最小日志级别。需要在 <code>config/config.exs</code> 中设置：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> Mix.config</span><br><span class="line">config <span class="symbol">:issues</span>, <span class="symbol">github_url:</span> <span class="string">"https://api.github.com"</span></span><br><span class="line">config <span class="symbol">:logger</span>, <span class="symbol">compile_time_purge_level:</span> <span class="symbol">:info</span></span><br></pre></td></tr></table></figure>
+<p>二，在运行时调用 <code>Logger.configure</code> 来改变最小日志级别。当然，这种方式不能超出配置定义的最小级别。</p>
+<p>然后可以在程序中加入日志信息了。</p>
+<p>基本的日志方法是 <code>Logger.debug, .info, .warn, .error</code>，函数参数为一个字符串或者一个无参的函数。</p>
+<p><code>Logger.debug &quot;Order total #{total(order)}&quot;</code><br><code>Logger.debug fn -&gt; &quot;Order total #{total(order)}&quot; end</code></p>
+<p>来看看 加入了 logger 的 fetch 函数：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Issues.GithubIssues</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">require</span> Logger</span><br><span class="line">  <span class="variable">@user_agent</span> [ &#123;<span class="string">"User-agent"</span>, <span class="string">"Elixir dave@pragprog.com"</span>&#125; ]</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">fetch</span></span>(user, project) <span class="keyword">do</span></span><br><span class="line">    Logger.info <span class="string">"Fetching user <span class="subst">#&#123;user&#125;</span>'s project <span class="subst">#&#123;project&#125;</span>"</span> issues_url(user, project)</span><br><span class="line">    |&gt; HTTPoison.get(<span class="variable">@user_agent</span>)</span><br><span class="line">    |&gt; handle_response</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">handle_response</span></span>(&#123;<span class="symbol">:ok</span>, %&#123;<span class="symbol">status_code:</span> <span class="number">200</span>, <span class="symbol">body:</span> body&#125;&#125;) <span class="keyword">do</span> </span><br><span class="line">    Logger.info <span class="string">"Successful response"</span></span><br><span class="line">    Logger.debug <span class="keyword">fn</span> -&gt; inspect(body) <span class="keyword">end</span></span><br><span class="line">    &#123; <span class="symbol">:ok</span>, Poison.Parser.parse!(body) &#125;</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">handle_response</span></span>(&#123;<span class="number">_</span>, %&#123;<span class="symbol">status_code:</span> status, <span class="symbol">body:</span> body&#125;&#125;) <span class="keyword">do</span> </span><br><span class="line">    Logger.error <span class="string">"Error <span class="subst">#&#123;status&#125;</span> returned"</span></span><br><span class="line">    &#123; <span class="symbol">:error</span>, Poison.Parser.parse!(body) &#125;</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="variable">@github_url</span> Application.get_env(<span class="symbol">:issues</span>, <span class="symbol">:github_url</span>)</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">issues_url</span></span>(user, project) <span class="keyword">do</span> </span><br><span class="line">    <span class="string">"<span class="subst">#&#123;<span class="variable">@github_url</span>&#125;</span>/repos/<span class="subst">#&#123;user&#125;</span>/<span class="subst">#&#123;project&#125;</span>/issues"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>注意，<code>require Logger</code> 是必须的，不然报错。</p>
+<h3 id="Task-Create-Project-Documentation"><a href="#Task-Create-Project-Documentation" class="headerlink" title="Task: Create Project Documentation"></a>Task: Create Project Documentation</h3><p>使用 ExDoc 来写文档，首先在 <code>mix.exs</code> 中加入依赖，然后你需要一个设置输出格式，这里使用 earmark，一个 markdown 转 html 的转换器。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">defp</span> <span class="title">deps</span></span> <span class="keyword">do</span></span><br><span class="line">  [</span><br><span class="line">    ...,</span><br><span class="line">    &#123;<span class="symbol">:ex_doc</span>, <span class="string">"~&gt; 0.12"</span>&#125;,</span><br><span class="line">    &#123;<span class="symbol">:earmark</span>, <span class="string">"~&gt; 1.0"</span>, <span class="symbol">override:</span> <span class="keyword">true</span>&#125;</span><br><span class="line">  ]</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>mix.exs</code> 你可以设置 project 的名字和远程仓库的地址。设置好后 ExDoc 会生成真实的文档链接。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">project</span></span> <span class="keyword">do</span></span><br><span class="line">  [</span><br><span class="line">    ...,</span><br><span class="line">    <span class="symbol">name:</span> <span class="string">"Issues"</span>,</span><br><span class="line">    <span class="symbol">source_url:</span> <span class="string">"https://github.com/pragdave/issues"</span>,</span><br><span class="line">    ...</span><br><span class="line">  ]</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>然后运行 <code>mix deps.get</code></p>
+<p>然后生成 doc，<br>执行命令<code>$ mix docs</code></p>
+<p>然后就可以在浏览器中打开 <code>docs/index.html</code> 查看文档了。</p>
+<h3 id="Coding-by-Transforming-Data"><a href="#Coding-by-Transforming-Data" class="headerlink" title="Coding by Transforming Data"></a>Coding by Transforming Data</h3><p>这章展示用 Elixir 来开发程序的一个过程常用的工具等等。<br>最重要的是，Elixir 开发的乐趣，以及函数式编程数据转变的方式。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Organizing-a-Project"><span class="toc-number">1.</span> <span class="toc-text">Organizing a Project</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Project-Fetch-Issues-from-GitHub"><span class="toc-number">1.1.</span> <span class="toc-text">The Project: Fetch Issues from GitHub</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#How-Our-Code-Will-Do-It"><span class="toc-number">1.1.1.</span> <span class="toc-text">How Our Code Will Do It</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Use-Mix-to-Create-Our-New-Project"><span class="toc-number">1.2.</span> <span class="toc-text">Task: Use Mix to Create Our New Project</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Create-the-Project-Tree"><span class="toc-number">1.2.1.</span> <span class="toc-text">Create the Project Tree</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transformation-Parse-the-Command-Line"><span class="toc-number">1.3.</span> <span class="toc-text">Transformation: Parse the Command Line</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Step-Write-Some-Basic-Tests"><span class="toc-number">1.4.</span> <span class="toc-text">Step: Write Some Basic Tests</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transformation-Fetch-from-GitHub"><span class="toc-number">1.5.</span> <span class="toc-text">Transformation: Fetch from GitHub</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Use-Libraries"><span class="toc-number">1.6.</span> <span class="toc-text">Task; Use Libraries</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Finding-an-External-Library"><span class="toc-number">1.6.1.</span> <span class="toc-text">Finding an External Library</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Adding-a-Library-to-Your-Project"><span class="toc-number">1.6.2.</span> <span class="toc-text">Adding a Library to Your Project</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Back-to-the-Transformation"><span class="toc-number">1.6.3.</span> <span class="toc-text">Back to the Transformation</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transformation-Convert-Response"><span class="toc-number">1.7.</span> <span class="toc-text">Transformation: Convert Response</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Application-Configuration"><span class="toc-number">1.7.1.</span> <span class="toc-text">Application Configuration</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transformation-Sort-Data"><span class="toc-number">1.8.</span> <span class="toc-text">Transformation: Sort Data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transformation-Take-First-n-Items"><span class="toc-number">1.9.</span> <span class="toc-text">Transformation: Take First n Items</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Transformation-Format-the-Table"><span class="toc-number">1.10.</span> <span class="toc-text">Transformation: Format the Table</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Make-a-Command-Line-Executable"><span class="toc-number">1.11.</span> <span class="toc-text">Task: Make a Command-Line Executable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Add-Some-Logging"><span class="toc-number">1.12.</span> <span class="toc-text">Task: Add Some Logging</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Task-Create-Project-Documentation"><span class="toc-number">1.13.</span> <span class="toc-text">Task: Create Project Documentation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Coding-by-Transforming-Data"><span class="toc-number">1.14.</span> <span class="toc-text">Coding by Transforming Data</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&text=elixir organizing a project"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&title=elixir organizing a project"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&is_video=false&description=elixir organizing a project"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir organizing a project&body=Check out this article: https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&title=elixir organizing a project"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&title=elixir organizing a project"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&title=elixir organizing a project"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&title=elixir organizing a project"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/01/18/elixir/2018-01-18-elixir-organizing-a-project/&name=elixir organizing a project&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 lichengzhi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

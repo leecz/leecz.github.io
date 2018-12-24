@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Processing Collections – Enum and StreamElixir 有很多表现为 Collections 的类型，比如 lists, maps, ranges, files, 甚至函数也是。 Collections  的实现各有不同，不过都有个相似的特征：均可以遍历。有大部分还可以添加元素。 Elixir 中有两个模块提供了一系列遍历的函数。 Enum 模块，你总会用到它">
+<meta name="keywords" content="elixir">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elixir processing collections -- enum and stream">
+<meta property="og:url" content="https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/index.html">
+<meta property="og:site_name" content="Chris Young&#39;s Blog">
+<meta property="og:description" content="Processing Collections – Enum and StreamElixir 有很多表现为 Collections 的类型，比如 lists, maps, ranges, files, 甚至函数也是。 Collections  的实现各有不同，不过都有个相似的特征：均可以遍历。有大部分还可以添加元素。 Elixir 中有两个模块提供了一系列遍历的函数。 Enum 模块，你总会用到它">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-24T15:59:57.436Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="elixir processing collections -- enum and stream">
+<meta name="twitter:description" content="Processing Collections – Enum and StreamElixir 有很多表现为 Collections 的类型，比如 lists, maps, ranges, files, 甚至函数也是。 Collections  的实现各有不同，不过都有个相似的特征：均可以遍历。有大部分还可以添加元素。 Elixir 中有两个模块提供了一系列遍历的函数。 Enum 模块，你总会用到它">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>elixir processing collections -- enum and stream</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/01/10/elixir/2018-01-10-elixir-maps-keyword-lists-sets-structs/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&text=elixir processing collections -- enum and stream"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&title=elixir processing collections -- enum and stream"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&is_video=false&description=elixir processing collections -- enum and stream"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir processing collections -- enum and stream&body=Check out this article: https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&title=elixir processing collections -- enum and stream"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&title=elixir processing collections -- enum and stream"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&title=elixir processing collections -- enum and stream"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&title=elixir processing collections -- enum and stream"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&name=elixir processing collections -- enum and stream&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Processing-Collections-–-Enum-and-Stream"><span class="toc-number">1.</span> <span class="toc-text">Processing Collections – Enum and Stream</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Enum-–-Processing-Collections"><span class="toc-number">1.1.</span> <span class="toc-text">Enum – Processing Collections</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Streams-–-lazy-Enumerables"><span class="toc-number">1.2.</span> <span class="toc-text">Streams – lazy Enumerables</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#A-Stream-Is-a-Composable-Enumerator"><span class="toc-number">1.2.1.</span> <span class="toc-text">A Stream Is a Composable Enumerator</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Infinite-Streams"><span class="toc-number">1.3.</span> <span class="toc-text">Infinite Streams</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Creating-Your-Own-Streams"><span class="toc-number">1.4.</span> <span class="toc-text">Creating Your Own Streams</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Stream-cycle"><span class="toc-number">1.4.1.</span> <span class="toc-text">Stream.cycle</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Stream-repeatedly"><span class="toc-number">1.4.2.</span> <span class="toc-text">Stream.repeatedly</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Stream-iterate"><span class="toc-number">1.4.3.</span> <span class="toc-text">Stream.iterate</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Stream-unfold"><span class="toc-number">1.4.4.</span> <span class="toc-text">Stream.unfold</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Stream-resource"><span class="toc-number">1.4.5.</span> <span class="toc-text">Stream.resource</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Streams-in-Practice"><span class="toc-number">1.4.6.</span> <span class="toc-text">Streams in Practice</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Collectable-Protocol"><span class="toc-number">1.5.</span> <span class="toc-text">The Collectable Protocol</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Comprehensions"><span class="toc-number">1.6.</span> <span class="toc-text">Comprehensions</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Comprehensions-Work-on-Bits-Too"><span class="toc-number">1.6.1.</span> <span class="toc-text">Comprehensions Work on Bits, Too</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Scoping-and-Comprehensions"><span class="toc-number">1.6.2.</span> <span class="toc-text">Scoping and Comprehensions</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Value-Returned-by-a-Comprehension"><span class="toc-number">1.6.3.</span> <span class="toc-text">The Value Returned by a Comprehension</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        elixir processing collections -- enum and stream
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="name">Chris Young's Blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2018-01-11T14:56:26.000Z" itemprop="datePublished">2018-01-11</time>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/elixir/">elixir</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/elixir/">elixir</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Processing-Collections-–-Enum-and-Stream"><a href="#Processing-Collections-–-Enum-and-Stream" class="headerlink" title="Processing Collections – Enum and Stream"></a>Processing Collections – Enum and Stream</h2><p>Elixir 有很多表现为 Collections 的类型，比如 lists, maps, ranges, files, 甚至函数也是。</p>
+<p>Collections  的实现各有不同，不过都有个相似的特征：均可以遍历。有大部分还可以添加元素。</p>
+<p>Elixir 中有两个模块提供了一系列遍历的函数。 Enum 模块，你总会用到它。Stream 模块，可以惰性枚举 collection，意思是你需要时才进行计算。</p>
+<h3 id="Enum-–-Processing-Collections"><a href="#Enum-–-Processing-Collections" class="headerlink" title="Enum – Processing Collections"></a>Enum – Processing Collections</h3><p>Elixir 中 Enum 模块用的超多，用他来 iterate, filter, combine, split 还有其他集合操作。</p>
+<ul>
+<li><p>将 collection 转为 list:<br><code>iex&gt; list = Enum.to_list 1..5</code></p>
+</li>
+<li><p>合并 collections：<br><code>iex&gt; Enum.concat([1, 2, 3], [4, 5, 6])</code><br>`iex&gt; Enum.concat([1, 2, 3], ‘abc’)</p>
+</li>
+<li><p>遍历操作元素：<br><code>iex&gt; Enum.map(list, &amp;(&amp;1 * 10))</code><br>`iex&gt; Enum.map(list, &amp;String.duplicate(“*”, &amp;1))</p>
+</li>
+<li><p>选取值：</p>
+</li>
+</ul>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; Enum.at(<span class="number">10</span>..<span class="number">20</span>, <span class="number">3</span>)</span><br><span class="line">iex&gt; Enum.at(<span class="number">10</span>..<span class="number">20</span>, <span class="number">20</span>)</span><br><span class="line">iex&gt; Enum.at(<span class="number">10</span>..<span class="number">20</span>, <span class="number">20</span>, <span class="symbol">:no_one_here</span>)</span><br><span class="line">iex&gt; Enum.filter(list, &amp;(&amp;<span class="number">1</span> &gt; <span class="number">2</span>))</span><br><span class="line">iex&gt; <span class="keyword">require</span> Integer</span><br><span class="line">iex&gt; Enum.filter(list, &amp;Integer.is_even/<span class="number">1</span>)</span><br><span class="line">iex&gt; Enum.reject(list, &amp;Integer.is_even/<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>排序比较：</li>
+</ul>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; Enum.sort [<span class="string">"there"</span>, <span class="string">"was"</span>, <span class="string">"a"</span>, <span class="string">"crooked"</span>, <span class="string">"man"</span>]</span><br><span class="line">[<span class="string">"a"</span>, <span class="string">"crooked"</span>, <span class="string">"man"</span>, <span class="string">"there"</span>, <span class="string">"was"</span>]</span><br><span class="line">iex&gt; Enum.sort [<span class="string">"there"</span>, <span class="string">"was"</span>, <span class="string">"a"</span>, <span class="string">"crooked"</span>, <span class="string">"man"</span>],</span><br><span class="line">...&gt; &amp;(String.length(&amp;<span class="number">1</span>) &lt;= String.length(&amp;<span class="number">2</span>)) [<span class="string">"a"</span>, <span class="string">"was"</span>, <span class="string">"man"</span>, <span class="string">"there"</span>, <span class="string">"crooked"</span>]</span><br><span class="line">iex(<span class="number">4</span>)&gt; Enum.max [<span class="string">"there"</span>, <span class="string">"was"</span>, <span class="string">"a"</span>, <span class="string">"crooked"</span>, <span class="string">"man"</span>]</span><br><span class="line"><span class="string">"was"</span></span><br><span class="line">iex(<span class="number">5</span>)&gt; Enum.max_by [<span class="string">"there"</span>, <span class="string">"was"</span>, <span class="string">"a"</span>, <span class="string">"crooked"</span>, <span class="string">"man"</span>], &amp;String.length/<span class="number">1</span> </span><br><span class="line"><span class="string">"crooked"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>拆分：</li>
+</ul>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; enum.take(list, <span class="number">3</span>)</span><br><span class="line">iex&gt; Enum.take_every list, <span class="number">2</span></span><br><span class="line">iex&gt; Enum.take_while(list, &amp;(&amp;<span class="number">1</span> &lt; <span class="number">4</span>))</span><br><span class="line">iex&gt; Enum.split(list, <span class="number">3</span>)</span><br><span class="line">iex&gt; Enum.split_while(list, &amp;(&amp;<span class="number">1</span> &lt; <span class="number">4</span>))</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>连接<br><code>iex&gt; Enum.join(list)</code><br><code>iex&gt; Enum.join(list, &quot;,&quot;)</code></p>
+</li>
+<li><p>判断</p>
+</li>
+</ul>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; Enum.all?(list, &amp;(&amp;<span class="number">1</span> &lt; <span class="number">4</span>))</span><br><span class="line">iex&gt; Enum.any?(list, &amp;(&amp;<span class="number">1</span> &lt; <span class="number">4</span>))</span><br><span class="line">iex&gt; Enum.member?(list, <span class="number">4</span>)</span><br><span class="line">iex&gt; Enum.empty?(list)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>汇合(Merge)<br><code>iex&gt; Enum.zip(list, [:a, :b, :c])</code><br><code>iex&gt; Enum.with_index([&#39;once&quot;, &quot;upon&quot;, &quot;a&quot;, &quot;time&quot;])</code></p>
+</li>
+<li><p>聚集(Fold)</p>
+</li>
+</ul>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">iex&gt; Enum.reduce(<span class="number">1</span>..<span class="number">100</span>, &amp;(&amp;<span class="number">1</span>+&amp;<span class="number">2</span>))</span><br><span class="line"><span class="number">5050</span></span><br><span class="line">Enum.reduce([<span class="string">"now"</span>, <span class="string">"is"</span>, <span class="string">"the"</span>, <span class="string">"time"</span>],<span class="keyword">fn</span> word, longest -&gt;</span><br><span class="line">  if String.length(word) &gt; String.length(longest) <span class="keyword">do</span></span><br><span class="line">    word</span><br><span class="line">  else</span><br><span class="line">    longest</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span>)</span><br><span class="line"><span class="string">"time"</span></span><br><span class="line"></span><br><span class="line">Enum.reduce([<span class="string">"now"</span>, <span class="string">"is"</span>, <span class="string">"the"</span>, <span class="string">"time"</span>], <span class="number">0</span>, <span class="keyword">fn</span> word, longest -&gt; </span><br><span class="line">  if String.length(word) &gt; longest,</span><br><span class="line">    <span class="symbol">do:</span> String.length(word), </span><br><span class="line">  <span class="symbol">else:</span> longest</span><br><span class="line"><span class="keyword">end</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>来打牌：</li>
+</ul>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Enum</span><br><span class="line"></span><br><span class="line">deck = <span class="keyword">for</span> rank &lt;- <span class="string">'23456789TJQKA'</span>, suit &lt;- <span class="string">'CDHS'</span>, <span class="symbol">do:</span> [suit, rank]</span><br><span class="line"><span class="comment"># =&gt; ['C2', 'D2', 'H2', 'S2', 'C3', ... ]</span></span><br><span class="line"></span><br><span class="line">deck |&gt; shuffle |&gt; take(<span class="number">13</span>)</span><br><span class="line"><span class="comment"># =&gt; ['DQ', 'S6', 'HJ', 'H4', 'C7', 'D6', 'SJ', 'S9', 'D7', 'HA', 'S4', 'C2', 'CT']</span></span><br><span class="line"></span><br><span class="line">hands = deck |&gt; shuffle |&gt; chunk(<span class="number">13</span>)</span><br><span class="line"><span class="comment"># =&gt; [</span></span><br><span class="line">[<span class="string">'D8'</span>, <span class="string">'CQ'</span>, <span class="string">'H2'</span>, <span class="string">'H3'</span>, <span class="string">'HK'</span>, <span class="string">'H9'</span>, <span class="string">'DK'</span>, <span class="string">'S9'</span>, <span class="string">'CT'</span>, <span class="string">'ST'</span>, <span class="string">'SK'</span>, <span class="string">'D2'</span>, <span class="string">'HA'</span>],</span><br><span class="line">[<span class="string">'C5'</span>, <span class="string">'S3'</span>, <span class="string">'CK'</span>, <span class="string">'HQ'</span>, <span class="string">'D3'</span>, <span class="string">'D4'</span>, <span class="string">'CA'</span>, <span class="string">'C8'</span>, <span class="string">'S6'</span>, <span class="string">'DQ'</span>, <span class="string">'H5'</span>, <span class="string">'S2'</span>, <span class="string">'C4'</span>], </span><br><span class="line">[<span class="string">'C7'</span>, <span class="string">'C6'</span>, <span class="string">'C2'</span>, <span class="string">'D6'</span>, <span class="string">'D7'</span>, <span class="string">'SA'</span>, <span class="string">'SQ'</span>, <span class="string">'H8'</span>, <span class="string">'DT'</span>, <span class="string">'C3'</span>, <span class="string">'H7'</span>, <span class="string">'DA'</span>, <span class="string">'HT'</span>], </span><br><span class="line">[<span class="string">'S5'</span>, <span class="string">'S4'</span>, <span class="string">'C9'</span>, <span class="string">'S8'</span>, <span class="string">'D5'</span>, <span class="string">'H4'</span>, <span class="string">'S7'</span>, <span class="string">'SJ'</span>, <span class="string">'HJ'</span>, <span class="string">'D9'</span>, <span class="string">'DJ'</span>, <span class="string">'CJ'</span>, <span class="string">'H6'</span>]]</span><br></pre></td></tr></table></figure>
+<h3 id="Streams-–-lazy-Enumerables"><a href="#Streams-–-lazy-Enumerables" class="headerlink" title="Streams – lazy Enumerables"></a>Streams – lazy Enumerables</h3><p>Enum 模块，是即时计算的，你传给他一个 collection，它马上返回一个你需要的 collection。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> ]</span><br><span class="line">|&gt; Enum.map(&amp;(&amp;<span class="number">1</span>*&amp;<span class="number">1</span>))</span><br><span class="line">|&gt; Enum.with_index</span><br><span class="line">|&gt; Enum.map(<span class="keyword">fn</span> &#123;value, index&#125; -&gt; value - index <span class="keyword">end</span>) </span><br><span class="line">|&gt; IO.inspect </span><br><span class="line"><span class="comment">#=&gt; [1,3,7,13,21]</span></span><br></pre></td></tr></table></figure>
+<p>来看另外一个例子：</p>
+<p>从一个文件中，从一个文件中读取内容，返回最长的单词。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">IO.puts File.read!(<span class="string">"/usr/share/dict/words"</span>)</span><br><span class="line">  |&gt; String.split</span><br><span class="line">  |&gt; Enum.max_by(&amp;String.length/<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>上面的程序会将整个文件的内容读入内存，然后将单词分割，然后找出最长的单词。<br>这种处理方式会很浪费资源，每次调用都会读取一个 collection 并返回一个 collection。</p>
+<p>我们想要的是只在我们需要时才处理集合中的元素，我们没必要存储中间集合结果，只需将当前的元素从一个函数传到另一个。<br>这就是 Stream 做的事。</p>
+<h4 id="A-Stream-Is-a-Composable-Enumerator"><a href="#A-Stream-Is-a-Composable-Enumerator" class="headerlink" title="A Stream Is a Composable Enumerator"></a>A Stream Is a Composable Enumerator</h4><p>直接看栗子：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; s = Stream.map [<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>], &amp;(&amp;<span class="number">1</span> + <span class="number">1</span>)</span><br><span class="line"><span class="comment">#Stream&lt;...&gt;</span></span><br></pre></td></tr></table></figure>
+<p>当使用 <code>Stream.map</code> 时，不会立即返回 <code>[2, 4, 6, 8]</code> 的结果，而是返回一个 stream 值。<br>那咋子时候才能拿到我们需要的结果？把它当做一个 collection 然后作为参数传给 Enum 模块：</p>
+<p><code>iex&gt; s = Stream.map [1, 3, 5, 7], &amp;(&amp;1 + 1)</code><br><code>iex&gt; Enum.to_list s</code></p>
+<p>streams 是可以枚举的，你还可以把 stream 传给 stream, 所以 stream 也是可以组成的。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">iex&gt; squares = Stream.map [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], &amp;(&amp;<span class="number">1</span>*&amp;<span class="number">1</span>) <span class="comment">#Stream&lt;[enum: [1, 2, 3, 4],</span></span><br><span class="line">         <span class="symbol">funs:</span> [<span class="comment">#Function&lt;32.133702391 in Stream.map/2&gt;] ]&gt;</span></span><br><span class="line">iex&gt; plus_ones = Stream.map squares, &amp;(&amp;<span class="number">1</span>+<span class="number">1</span>) <span class="comment">#Stream&lt;[enum: [1, 2, 3, 4],</span></span><br><span class="line">         <span class="symbol">funs:</span> [<span class="comment">#Function&lt;32.133702391 in Stream.map/2&gt;,</span></span><br><span class="line">                <span class="comment">#Function&lt;32.133702391 in Stream.map/2&gt;] ]&gt;</span></span><br><span class="line">iex&gt; odds = Stream.filter plus_ones, <span class="keyword">fn</span> x -&gt; rem(x,<span class="number">2</span>) == <span class="number">1</span> <span class="keyword">end</span> <span class="comment">#Stream&lt;[enum: [1, 2, 3, 4],</span></span><br><span class="line">         <span class="symbol">funs:</span> [<span class="comment">#Function&lt;26.133702391 in Stream.filter/2&gt;,</span></span><br><span class="line">                <span class="comment">#Function&lt;32.133702391 in Stream.map/2&gt;,</span></span><br><span class="line">                <span class="comment">#Function&lt;32.133702391 in Stream.map/2&gt;] ]&gt;</span></span><br><span class="line">iex&gt; Enum.to_list odds [<span class="number">5</span>, <span class="number">17</span>]</span><br></pre></td></tr></table></figure>
+<p>当然，实际应用中，我们这么写：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]</span><br><span class="line">|&gt; Stream.map(&amp;(&amp;<span class="number">1</span>*&amp;<span class="number">1</span>))</span><br><span class="line">|&gt; Stream.map(&amp;(&amp;<span class="number">1</span>+<span class="number">1</span>))</span><br><span class="line">|&gt; Stream.filter(<span class="keyword">fn</span> x -&gt; rem(x,<span class="number">2</span>) == <span class="number">1</span> <span class="keyword">end</span>) </span><br><span class="line">|&gt; Enum.to_list</span><br></pre></td></tr></table></figure>
+<p>注意，我们这里没有创建临时的 lists，我们只是将 collections 的元素不断的传递到下一个链。<br>链式的 streams 就像一列函数，每个函数都会作用于 stream 的元素</p>
+<p>不只是 lists，越来越多其他 Elixir 模块也支持 Stream。<br>比如：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">IO.puts File.open!(<span class="string">"/usr/share/dict/words"</span>)</span><br><span class="line">  |&gt; IO.stream(<span class="symbol">:line</span>)</span><br><span class="line">  |&gt; Enum.max_by(&amp;String.length/<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p><code>IO.stream</code> 将 IO 设备转化为 stream，使其可以在一个时间点只使用一行。当然这么常用的东西，肯定有简写：<br><code>IO.puts File.stream!(&quot;/usr/share/dict/words&quot;) |&gt; Enum.max_by(&amp;String.length/1)</code></p>
+<p>不过呢，这样写的好处是这里同样没有临时存储，不好的是它比 Enum 版本慢了2倍。<br>然而，实际编程中，我们常常会从远程的服务器或者外部的传感器读取数据，连续的数据行缓缓而来，甚至是源源不断，使用 Enum 的话，<br>我们就得等到所有的数据行接收完成之后才能进行处理，使用 streams 的话，数据随到随处理。</p>
+<h3 id="Infinite-Streams"><a href="#Infinite-Streams" class="headerlink" title="Infinite Streams"></a>Infinite Streams</h3><p>因为 streams 是惰性的。不需要提前拿到整个 collection。举个例子，如果这样：<br><code>iex&gt; Enum.map(1..10_000_000, &amp;(&amp;+1)) |&gt; Enum.take(5)</code><br><code>[2, 3, 4, 5, 6]</code><br>需要 等待 8s 左右才看到结果。如果这样写：<br><code>iex&gt; Stream.map(1..10_000_000, &amp;(&amp;1+1)) |&gt; Enum.take(5)</code><br>结果会连续的输出。</p>
+<h3 id="Creating-Your-Own-Streams"><a href="#Creating-Your-Own-Streams" class="headerlink" title="Creating Your Own Streams"></a>Creating Your Own Streams</h3><p>在 Elixir 中，Streams 是独立实现地，没有其他运行时支持。但并不简单，而且你可能用到 cycle, repeatedly,iterate,unfold, resource等等好多函数。</p>
+<h4 id="Stream-cycle"><a href="#Stream-cycle" class="headerlink" title="Stream.cycle"></a>Stream.cycle</h4><p><code>Stream.cycle</code> 使用可枚举的参数，返回一个包含了可枚举元素的 infinite stream。当他到达尾部，又会重头开始，无线循环。<br>看这个例子:</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Stream.cycle(~w&#123;green white&#125;) </span><br><span class="line">  |&gt; Stream.zip(<span class="number">1</span>..<span class="number">5</span>)</span><br><span class="line">  |&gt; Enum.map(<span class="keyword">fn</span> &#123;class, value&#125; -&gt; ~s&#123;&lt;tr class=<span class="string">"<span class="subst">#&#123;class&#125;</span>"</span>&gt;&lt;td&gt;<span class="comment">#&#123;value&#125;&lt;/td&gt;&lt;/tr&gt;\n&#125; end)</span></span><br><span class="line">  |&gt; IO.puts</span><br><span class="line"></span><br><span class="line"><span class="comment"># =&gt; </span></span><br><span class="line">&lt;tr class=<span class="string">"green"</span>&gt;&lt;td&gt;<span class="number">1</span>&lt;<span class="regexp">/td&gt;&lt;/tr</span>&gt;</span><br><span class="line">&lt;tr class=<span class="string">"white"</span>&gt;&lt;td&gt;<span class="number">2</span>&lt;<span class="regexp">/td&gt;&lt;/tr</span>&gt;</span><br><span class="line">&lt;tr class=<span class="string">"green"</span>&gt;&lt;td&gt;<span class="number">3</span>&lt;<span class="regexp">/td&gt;&lt;/tr</span>&gt;</span><br><span class="line">&lt;tr class=<span class="string">"white"</span>&gt;&lt;td&gt;<span class="number">4</span>&lt;<span class="regexp">/td&gt;&lt;/tr</span>&gt;</span><br><span class="line">&lt;tr class=<span class="string">"green"</span>&gt;&lt;td&gt;<span class="number">5</span>&lt;<span class="regexp">/td&gt;&lt;/tr</span>&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="Stream-repeatedly"><a href="#Stream-repeatedly" class="headerlink" title="Stream.repeatedly"></a>Stream.repeatedly</h4><p><code>Stream.repeatedly</code> 的参数为一个函数，然后每次有新数据都会执行这个函数。<br><code>iex&gt; Stream.repeatedly(fn -&gt; true end) |&gt; Enum.take(3)</code><br><code>iex&gt; Stream.repeatedly(&amp;:random.uniform/0) |&gt; Enum.take(3)</code></p>
+<h4 id="Stream-iterate"><a href="#Stream-iterate" class="headerlink" title="Stream.iterate"></a>Stream.iterate</h4><p><code>Stream.iterate(start_value, next_fun)</code> 生成一个 infinite stream，<br>第一个值是 <code>start_value</code>，下一个值是 <code>next_fun</code> 以该值为参数执行后的返回值。<br>无限执行下去。</p>
+<p>来看个例子：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; Stream.iterate(<span class="number">0</span>, &amp;(&amp;<span class="number">1</span>+<span class="number">1</span>)) |&gt; Enum.take(<span class="number">5</span>)</span><br><span class="line">[<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line">iex&gt; Stream.iterate(<span class="number">2</span>, &amp;(&amp;<span class="number">1</span>*&amp;<span class="number">1</span>)) |&gt; Enum.take(<span class="number">5</span>)</span><br><span class="line">[<span class="number">2</span>, <span class="number">4</span>, <span class="number">16</span>, <span class="number">256</span>, <span class="number">65536</span>]</span><br><span class="line">iex&gt; Stream.iterate([], &amp;[&amp;<span class="number">1</span>]) |&gt; Enum.take(<span class="number">5</span>)</span><br><span class="line">[[], [[]], [[[]]], [[[[]]]], [[[[[]]]]] ]</span><br></pre></td></tr></table></figure>
+<h4 id="Stream-unfold"><a href="#Stream-unfold" class="headerlink" title="Stream.unfold"></a>Stream.unfold</h4><p><code>Stream.unfold</code> 和 <code>iterate</code> 是一类的，但是你可以更明确的指明 stream 的输出以及传给下一个函数的值。你提供一个初始值和函数，函数使用参数来返回有两个值的 tuple。<br>第一个值是该 stream 遍历的返回值，第二个是传给下一个函数的值。如果函数返回 nil，stream 就会结束。</p>
+<p>有点抽象，但是 unfold 是很有用的，他用于创建无限的 stream 的值，每个值都是前一个函数执行的结果。</p>
+<p>关键是 生成函数，他的一般表示为：</p>
+<p><code>fn state -&gt; { stream_value, new_state } end</code></p>
+<p>举个例子，Fibonacci 数的 stream:</p>
+<p><code>iex&gt; Stream.unfold({0, 1}, fn {f1, f2} -&gt; {f1, {f2, f1 + f2}} end) |&gt; Enum.take(15)</code></p>
+<p>这儿的 state 是一个 tuple，包含一个当前值和其下一位的值。初始值 为 <code>{0， 1}</code>. 每次循环 stream 的返回值为状态值的第一个，然后状态向前走，<code>{f1, f2}</code> 变为 <code>{f2, f1+f2}</code>。</p>
+<h4 id="Stream-resource"><a href="#Stream-resource" class="headerlink" title="Stream.resource"></a>Stream.resource</h4><p>stream 怎样跟外部的资源交互？我们已经试过从文件中读取数据行到 stream 中，那你如何自己实现呢？<br>你需要在 stream 开始时打开文件，返回连续的数据行，然后关闭文件。或者你想将数据库中的结果集放进 stream 的值呢？<br>你需要在 stream 开始时执行查询语句，以 stream 的返回值返回数据行，然后关闭查询，这就是 <code>Stream.resource</code> 做的事。</p>
+<p><code>Stream.resource</code> 构建于 <code>Stream.unfold</code> 之上。</p>
+<p>unfold 的第一个参数是循环的初始值，不过当这个值为外部资源时，我们想让其在 stream 开始时才获取值，为此，resource 第一个参数接收一个函数，该函数返回这个值。</p>
+<p>当 stream 完成时，我们想让资源关闭。这是第三个参数的作用，这个函数可以拿到最终的值并且可以操作外部资源。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Stream.resource(<span class="keyword">fn</span> -&gt; File.open!(<span class="string">"sample"</span>) <span class="keyword">end</span>,</span><br><span class="line">  <span class="keyword">fn</span> file -&gt; </span><br><span class="line">    <span class="keyword">case</span> IO.read(file, <span class="symbol">:line</span>) <span class="keyword">do</span></span><br><span class="line">      data <span class="keyword">when</span> is_binary(data) -&gt; &#123;[data], file&#125;</span><br><span class="line">      <span class="number">_</span> -&gt; &#123;<span class="symbol">:halt</span>, file&#125;</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span>,</span><br><span class="line">  <span class="keyword">fn</span> file -&gt; File.close(file) <span class="keyword">end</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>第一个函数在 stream 激活时打开文件，然后将其返回值传给第二个函数，这个函数以行来读取文件，匹配数据行，根据匹配的数据返回 tuple。第三个函数关闭文件。</p>
+<p>以 time 为例。我们想实现一个按分钟的倒计时器。使用 stream resource 来完成。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># enum/countdown.exs</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Countdown</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">sleep</span></span>(seconds) <span class="keyword">do</span></span><br><span class="line">    receive <span class="keyword">do</span></span><br><span class="line">      after seconds * <span class="number">1000</span>  -&gt; <span class="keyword">nil</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">say</span></span>(text) <span class="keyword">do</span></span><br><span class="line">    spawn <span class="keyword">fn</span> -&gt; <span class="symbol">:os</span>.cmd(<span class="string">'say <span class="subst">#&#123;text&#125;</span>'</span>) <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">timer</span></span> <span class="keyword">do</span></span><br><span class="line">    Stream.resource(</span><br><span class="line">      <span class="keyword">fn</span> -&gt; </span><br><span class="line">        &#123;_h, _m, s&#125; = <span class="symbol">:erlang</span>.time</span><br><span class="line">        <span class="number">60</span> - s - <span class="number">1</span></span><br><span class="line">      <span class="keyword">end</span>,</span><br><span class="line">      <span class="keyword">fn</span> </span><br><span class="line">        <span class="number">0</span> -&gt; </span><br><span class="line">          &#123;<span class="symbol">:halt</span>, <span class="number">0</span>&#125;</span><br><span class="line">        count -&gt;</span><br><span class="line">          sleep(<span class="number">1</span>)</span><br><span class="line">          &#123; [inspect(count)], count - <span class="number">1</span>&#125;</span><br><span class="line">      <span class="keyword">end</span>,</span><br><span class="line">      <span class="keyword">fn</span> <span class="number">_</span> -&gt; <span class="keyword">nil</span> <span class="keyword">end</span></span><br><span class="line">    )</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>玩一哈：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>iex countdown.exs</span><br><span class="line">iex&gt; counter = Countdown.timer</span><br><span class="line"><span class="comment">#Function&lt;17.133702391 in Stream.resource/3&gt;</span></span><br><span class="line">iex&gt; printer = counter |&gt; Stream.each(&amp;IO.puts/<span class="number">1</span>) <span class="comment">#Stream[enum: #Function&lt;17.133702391 in Stream.resource/3&gt;,</span></span><br><span class="line"><span class="symbol">funs:</span> [<span class="comment">#Function&lt;0.133702391 in Stream.each/2&gt;] ]&gt;</span></span><br><span class="line">iex&gt; speaker = printer |&gt; Stream.each(&amp;Countdown.say/<span class="number">1</span>) <span class="comment">#Stream[enum: #Function&lt;17.133702391 in Stream.resource/3&gt;,</span></span><br><span class="line"> <span class="symbol">funs:</span> [<span class="comment">#Function&lt;0.133702391 in Stream.each/2&gt;,</span></span><br><span class="line">  <span class="comment">#Function&lt;0.133702391 in Stream.each/2&gt;] ]&gt;</span></span><br><span class="line"></span><br><span class="line">iex&gt; speaker |&gt; Enum.take(<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+<p>然后你就会听到你的电脑倒计时读秒数了，没有听到的话找到你电脑系统对应的 say 命令（say 是 MacOS 的）.</p>
+<h4 id="Streams-in-Practice"><a href="#Streams-in-Practice" class="headerlink" title="Streams in Practice"></a>Streams in Practice</h4><p>函数式编程需要你以一种全新的视角来看问题，而 stream 同样让你以另一种方式来对待循环和集合。不是每个循环都需要 stream，但是当你需要延迟执行时或者需要处理大量数据时，你该考虑使用 stream。</p>
+<h3 id="The-Collectable-Protocol"><a href="#The-Collectable-Protocol" class="headerlink" title="The Collectable Protocol"></a>The Collectable Protocol</h3><p><code>Enumerable</code> 提供了遍历集合元素的接口。<code>Collectable</code> 则是相反的操作，插入元素构建集合。</p>
+<p>不是所有的集合都可以 collectable。比如 Ranges，就不能插入新元素。</p>
+<p>collectable API 是相当底层的，一般你会使用 <code>Enum.into</code> 来访问它。</p>
+<p>将 range 的元素注入 list。<br><code>iex&gt; Enum.into 1..5, []</code></p>
+<p>当 list 不为空时，新元素会加入 list 的尾部：<br><code>iex&gt; Enum.into 1..5, [100, 101]</code><br><code>#=&gt; [100, 101, 1, 2, 3, 4, 5]</code></p>
+<h3 id="Comprehensions"><a href="#Comprehensions" class="headerlink" title="Comprehensions"></a>Comprehensions</h3><p>函数式代码，少不了写 map 和 filter，Elixir 提供了 comprehension 来简化他们的写法。<br>comprehension 的想法很简单：给定一个或者多个集合，取出每个元素，过滤值，然后用过滤后的值组成新的集合。<br>一般形式：</p>
+<p><code>result = for generator or filter...[, into: value], do: expression</code></p>
+<p>来看看具体的例子：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; <span class="keyword">for</span> x &lt;- [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>], <span class="symbol">do:</span> x * x</span><br><span class="line">[<span class="number">1</span>, <span class="number">4</span>, <span class="number">9</span>, <span class="number">16</span>, <span class="number">25</span>]</span><br><span class="line">iex&gt; <span class="keyword">for</span> x &lt;- [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>], x &lt; <span class="number">4</span>, <span class="symbol">do:</span> x * x</span><br></pre></td></tr></table></figure>
+<p>从集合中取值，可以使用模式匹配。</p>
+<p><code>pattern &lt;- enumerable_thing</code></p>
+<p>任何匹配的值都会用于 comprehension 后面的部分。比如 <code>x &lt;- [1, 2, 3]</code>， x 会依次设为 1， 2， 3等值。<br>如果值生成器为两个，则后面操作的值是嵌套的，<br>比如<code>x &lt;- [1, 2], y &lt;- [5, 6]</code>，之后的执行则是： <code>x = 1, y, = 5, x = 1, y = 6, x = 2, y = 5, x = 2, y = 6</code>,<br>跟循环嵌套一个道理。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; <span class="keyword">for</span> x &lt;-[<span class="number">1</span>,<span class="number">2</span>] , y &lt;- [<span class="number">5</span>,<span class="number">6</span>], <span class="symbol">do:</span> x*y </span><br><span class="line">[<span class="number">5</span>, <span class="number">6</span>, <span class="number">10</span>, <span class="number">12</span>]</span><br><span class="line">iex&gt; <span class="keyword">for</span> x &lt;- [<span class="number">1</span>,<span class="number">2</span>], y &lt;- [<span class="number">5</span>,<span class="number">6</span>], <span class="symbol">do:</span> &#123;x, y&#125; </span><br><span class="line">[&#123;<span class="number">1</span>, <span class="number">5</span>&#125;, &#123;<span class="number">1</span>, <span class="number">6</span>&#125;, &#123;<span class="number">2</span>, <span class="number">5</span>&#125;, &#123;<span class="number">2</span>, <span class="number">6</span>&#125;]</span><br></pre></td></tr></table></figure>
+<p>前面生成器中的变量可以在后面的生成器中使用：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; min_maxs = [&#123;<span class="number">1</span>, <span class="number">4</span>&#125;, &#123;<span class="number">2</span>, <span class="number">3</span>&#125;, &#123;<span class="number">10</span>, <span class="number">15</span>&#125;]</span><br><span class="line">[&#123;<span class="number">1</span>, <span class="number">4</span>&#125;, &#123;<span class="number">2</span>, <span class="number">3</span>&#125;, &#123;<span class="number">10</span>, <span class="number">15</span>&#125;]</span><br><span class="line">iex&gt; <span class="keyword">for</span> &#123;min, max&#125; &lt;- min_maxes, n &lt;- min..max, <span class="symbol">do:</span> n</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>, <span class="number">15</span>]</span><br></pre></td></tr></table></figure>
+<p>filter，过滤掉不符合要求的值，符合条件的值才进入余下的部分执行。</p>
+<p>看个例子：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; first8 = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>]</span><br><span class="line">iex&gt; <span class="keyword">for</span> x &lt;- first8, y &lt;- first8, x &gt;= y, rem(x*y, <span class="number">10</span>) == <span class="number">0</span>, <span class="symbol">do:</span> &#123;x, y&#125;</span><br><span class="line">[&#123;<span class="number">5</span>, <span class="number">2</span>&#125;, &#123;<span class="number">5</span>, <span class="number">4</span>&#125;, &#123;<span class="number">6</span>, <span class="number">5</span>&#125;, &#123;<span class="number">8</span>, <span class="number">5</span>&#125;]</span><br></pre></td></tr></table></figure>
+<p>由于生成器的第一部分为模式匹配，所以可以用其来解构结构化的数据。<br>比如：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; reports = [ <span class="symbol">dallas:</span> <span class="symbol">:hot</span>, <span class="symbol">minneapolis:</span> <span class="symbol">:cold</span>, <span class="symbol">dc:</span> <span class="symbol">:muggy</span>, <span class="symbol">la:</span> <span class="symbol">:smoggy</span> ]</span><br><span class="line">[<span class="symbol">dallas:</span> <span class="symbol">:hot</span>, <span class="symbol">minneapolis:</span> <span class="symbol">:cold</span>, <span class="symbol">dc:</span> <span class="symbol">:muggy</span>, <span class="symbol">la:</span> <span class="symbol">:smoggy</span>]</span><br><span class="line">iex&gt; <span class="keyword">for</span> &#123; city, weather &#125; &lt;- reports, <span class="symbol">do:</span> &#123; weather, city &#125;</span><br><span class="line">[<span class="symbol">hot:</span> <span class="symbol">:dallas</span>, <span class="symbol">cold:</span> <span class="symbol">:minneapolis</span>, <span class="symbol">muggy:</span> <span class="symbol">:dc</span>, <span class="symbol">smoggy:</span> <span class="symbol">:la</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="Comprehensions-Work-on-Bits-Too"><a href="#Comprehensions-Work-on-Bits-Too" class="headerlink" title="Comprehensions Work on Bits, Too"></a>Comprehensions Work on Bits, Too</h4><p>位串（二进制或者字符串）也是集合，所以 comprehension 同样适用。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; <span class="keyword">for</span> &lt;&lt; ch &lt;- <span class="string">"hello"</span> &gt;&gt;, <span class="symbol">do:</span> ch </span><br><span class="line"><span class="string">'hello'</span></span><br><span class="line">iex&gt; <span class="keyword">for</span> &lt;&lt; ch &lt;- <span class="string">"hello"</span> &gt;&gt;, <span class="symbol">do:</span> &lt;&lt;ch&gt;&gt; </span><br><span class="line">[<span class="string">"h"</span>, <span class="string">"e"</span>, <span class="string">"l"</span>, <span class="string">"l"</span>, <span class="string">"o"</span>]</span><br></pre></td></tr></table></figure>
+<p>这里生成器被包在了<code>&lt;&lt;&gt;&gt;</code>里面，说明是二进制。<br>第一个例子，do 块返回字符的 ASCII 码数字，结果为 <code>[104, 101, 108, 108, 111]</code>，不过在 iex 中展示为 ‘hello’。<br>第二个例子则是将数字转化为字符，所以是一个一个字符的列表。</p>
+<p>重申下，<code>&lt;-</code> 左边为模式匹配，所以可以使用二进制模式匹配。来看看将 string 转为八进制表示的字符串：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; <span class="keyword">for</span> &lt;&lt; &lt;&lt; b1::size(<span class="number">2</span>), b2::size(<span class="number">3</span>), b3::size(<span class="number">3</span>) &gt;&gt; &lt;- <span class="string">"hello"</span> &gt;&gt;, </span><br><span class="line">...&gt; <span class="symbol">do:</span> <span class="string">"0<span class="subst">#&#123;b1&#125;</span><span class="subst">#&#123;b2&#125;</span><span class="subst">#&#123;b3&#125;</span>"</span></span><br><span class="line">[<span class="string">"0150"</span>, <span class="string">"0145"</span>, <span class="string">"0154"</span>, <span class="string">"0154"</span>, <span class="string">"0157"</span>]</span><br></pre></td></tr></table></figure>
+<h4 id="Scoping-and-Comprehensions"><a href="#Scoping-and-Comprehensions" class="headerlink" title="Scoping and Comprehensions"></a>Scoping and Comprehensions</h4><p>所有变量都只在 comprehension 内部有效，外面访问不到的。</p>
+<h4 id="The-Value-Returned-by-a-Comprehension"><a href="#The-Value-Returned-by-a-Comprehension" class="headerlink" title="The Value Returned by a Comprehension"></a>The Value Returned by a Comprehension</h4><p>在之前的例子中，comprehension 返回的是 list，list 中的元素为 do 表达式执行的结果。</p>
+<p>这种行为可以被 <code>into:</code> 参数改变。<code>into:</code> 可以指定一个集合，然后 do 表达式循环执行的结果都将保存到这个集合。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; <span class="keyword">for</span> x &lt;- ~w&#123;cat dog&#125;, <span class="symbol">into:</span> %&#123;&#125;, <span class="symbol">do:</span> &#123;x, String.upcase(x)&#125;</span><br><span class="line">%&#123;<span class="string">"cat"</span> =&gt; <span class="string">"CAT"</span>, <span class="string">"dog"</span> =&gt; <span class="string">"DOG"</span>&#125;</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">iex&gt; <span class="keyword">for</span> x &lt;- ~w&#123; cat dog &#125;, <span class="symbol">into:</span> Map.new, <span class="symbol">do:</span> &#123; x, String.upcase(x) &#125;</span><br><span class="line">%&#123;<span class="string">"cat"</span> =&gt; <span class="string">"CAT"</span>, <span class="string">"dog"</span> =&gt; <span class="string">"DOG"</span>&#125;</span><br><span class="line"><span class="comment"># 这个集合不要求为空</span></span><br><span class="line">iex&gt; <span class="keyword">for</span> x &lt;- ~w&#123; cat dog &#125;, <span class="symbol">into:</span> %&#123;<span class="string">"ant"</span> =&gt; <span class="string">"ANT"</span>&#125;, <span class="symbol">do:</span> &#123; x, String.upcase(x) &#125; </span><br><span class="line">%&#123;<span class="string">"ant"</span> =&gt; <span class="string">"ANT"</span>, <span class="string">"cat"</span> =&gt; <span class="string">"CAT"</span>, <span class="string">"dog"</span> =&gt; <span class="string">"DOG"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p><code>into:</code> 可以接受哪些值呢？只要实现了 Collectable 接口的都行，包括 lists, binaries, functions, maps, files, hash dicts, hash sets, IO streams 等等，</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; <span class="keyword">for</span> x &lt;- ~w&#123; cat dog &#125;, <span class="symbol">into:</span> IO.stream(<span class="symbol">:stdio</span>,<span class="symbol">:line</span>), <span class="symbol">do:</span> <span class="string">"&lt;&lt;<span class="subst">#&#123;x&#125;</span>&gt;&gt;\n"</span> </span><br><span class="line">&lt;&lt;cat&gt;&gt;</span><br><span class="line">&lt;&lt;dog&gt;&gt;</span><br><span class="line">%IO.Stream&#123;<span class="symbol">device:</span> <span class="symbol">:standard_io</span>, <span class="symbol">line_or_bytes:</span> <span class="symbol">:line</span>, <span class="symbol">raw:</span> <span class="keyword">false</span>&#125;</span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Processing-Collections-–-Enum-and-Stream"><span class="toc-number">1.</span> <span class="toc-text">Processing Collections – Enum and Stream</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Enum-–-Processing-Collections"><span class="toc-number">1.1.</span> <span class="toc-text">Enum – Processing Collections</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Streams-–-lazy-Enumerables"><span class="toc-number">1.2.</span> <span class="toc-text">Streams – lazy Enumerables</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#A-Stream-Is-a-Composable-Enumerator"><span class="toc-number">1.2.1.</span> <span class="toc-text">A Stream Is a Composable Enumerator</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Infinite-Streams"><span class="toc-number">1.3.</span> <span class="toc-text">Infinite Streams</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Creating-Your-Own-Streams"><span class="toc-number">1.4.</span> <span class="toc-text">Creating Your Own Streams</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Stream-cycle"><span class="toc-number">1.4.1.</span> <span class="toc-text">Stream.cycle</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Stream-repeatedly"><span class="toc-number">1.4.2.</span> <span class="toc-text">Stream.repeatedly</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Stream-iterate"><span class="toc-number">1.4.3.</span> <span class="toc-text">Stream.iterate</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Stream-unfold"><span class="toc-number">1.4.4.</span> <span class="toc-text">Stream.unfold</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Stream-resource"><span class="toc-number">1.4.5.</span> <span class="toc-text">Stream.resource</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Streams-in-Practice"><span class="toc-number">1.4.6.</span> <span class="toc-text">Streams in Practice</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Collectable-Protocol"><span class="toc-number">1.5.</span> <span class="toc-text">The Collectable Protocol</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Comprehensions"><span class="toc-number">1.6.</span> <span class="toc-text">Comprehensions</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Comprehensions-Work-on-Bits-Too"><span class="toc-number">1.6.1.</span> <span class="toc-text">Comprehensions Work on Bits, Too</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Scoping-and-Comprehensions"><span class="toc-number">1.6.2.</span> <span class="toc-text">Scoping and Comprehensions</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Value-Returned-by-a-Comprehension"><span class="toc-number">1.6.3.</span> <span class="toc-text">The Value Returned by a Comprehension</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&text=elixir processing collections -- enum and stream"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&title=elixir processing collections -- enum and stream"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&is_video=false&description=elixir processing collections -- enum and stream"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir processing collections -- enum and stream&body=Check out this article: https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&title=elixir processing collections -- enum and stream"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&title=elixir processing collections -- enum and stream"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&title=elixir processing collections -- enum and stream"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&title=elixir processing collections -- enum and stream"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/&name=elixir processing collections -- enum and stream&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 lichengzhi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+

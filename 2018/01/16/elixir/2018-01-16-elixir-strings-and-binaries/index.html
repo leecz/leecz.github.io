@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Strings and Binariesstring LiteralsElixir 中有两种 string：单引号的和双引号的，他们内部的表示结构完全不同，但是他们有很多共通的东西。  都能包含 UTF-8 编码的字符 都能使用转义字符： \a BEL (0x07) \e ESC (0x1b) \r CR (0x0d) \v VT (0x0b) \b BS (0x08) \f FF (0x0c)">
+<meta name="keywords" content="elixir">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elixir strings and binaries">
+<meta property="og:url" content="https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/index.html">
+<meta property="og:site_name" content="Chris Young&#39;s Blog">
+<meta property="og:description" content="Strings and Binariesstring LiteralsElixir 中有两种 string：单引号的和双引号的，他们内部的表示结构完全不同，但是他们有很多共通的东西。  都能包含 UTF-8 编码的字符 都能使用转义字符： \a BEL (0x07) \e ESC (0x1b) \r CR (0x0d) \v VT (0x0b) \b BS (0x08) \f FF (0x0c)">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-24T15:58:58.557Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="elixir strings and binaries">
+<meta name="twitter:description" content="Strings and Binariesstring LiteralsElixir 中有两种 string：单引号的和双引号的，他们内部的表示结构完全不同，但是他们有很多共通的东西。  都能包含 UTF-8 编码的字符 都能使用转义字符： \a BEL (0x07) \e ESC (0x1b) \r CR (0x0d) \v VT (0x0b) \b BS (0x08) \f FF (0x0c)">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>elixir strings and binaries</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/01/17/elixir/2018-01-17-elixir-control-flow/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2018/01/11/elixir/2018-01-11-elixir-processing-collections-enum-and-stream/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&text=elixir strings and binaries"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&title=elixir strings and binaries"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&is_video=false&description=elixir strings and binaries"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir strings and binaries&body=Check out this article: https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&title=elixir strings and binaries"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&title=elixir strings and binaries"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&title=elixir strings and binaries"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&title=elixir strings and binaries"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&name=elixir strings and binaries&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Strings-and-Binaries"><span class="toc-number">1.</span> <span class="toc-text">Strings and Binaries</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#string-Literals"><span class="toc-number">1.1.</span> <span class="toc-text">string Literals</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Heredocs"><span class="toc-number">1.1.1.</span> <span class="toc-text">Heredocs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Sigils"><span class="toc-number">1.1.2.</span> <span class="toc-text">Sigils</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Name-“strings”"><span class="toc-number">1.2.</span> <span class="toc-text">The Name “strings”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Single-Quoted-Strings-–-Lists-of-Character-Codes"><span class="toc-number">1.3.</span> <span class="toc-text">Single-Quoted Strings – Lists of Character Codes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Binaries"><span class="toc-number">1.4.</span> <span class="toc-text">Binaries</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Double-Quoted-Strings-Are-Binaries"><span class="toc-number">1.5.</span> <span class="toc-text">Double Quoted Strings Are Binaries</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Strings-and-Elixir-Libraries"><span class="toc-number">1.5.1.</span> <span class="toc-text">Strings and Elixir Libraries</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Binaries-and-Pattern-Matching"><span class="toc-number">1.6.</span> <span class="toc-text">Binaries and Pattern Matching</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#String-Processing-with-Binaries"><span class="toc-number">1.6.1.</span> <span class="toc-text">String Processing with Binaries</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        elixir strings and binaries
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="name">Chris Young's Blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2018-01-16T14:56:26.000Z" itemprop="datePublished">2018-01-16</time>
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fas fa-archive"></i>
+        <a class="category-link" href="/categories/elixir/">elixir</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/elixir/">elixir</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Strings-and-Binaries"><a href="#Strings-and-Binaries" class="headerlink" title="Strings and Binaries"></a>Strings and Binaries</h2><h3 id="string-Literals"><a href="#string-Literals" class="headerlink" title="string Literals"></a>string Literals</h3><p>Elixir 中有两种 string：单引号的和双引号的，他们内部的表示结构完全不同，但是他们有很多共通的东西。</p>
+<ul>
+<li>都能包含 UTF-8 编码的字符</li>
+<li>都能使用转义字符： <code>\a BEL (0x07) \e ESC (0x1b) \r CR (0x0d) \v VT (0x0b) \b BS (0x08) \f FF (0x0c) \s SP (0x20) \uhhh 1–6 hex digits \d DEL (0x7f) \n NL (0x0a) \t TAB (0x09) \xhh 2 hex digits</code></li>
+<li>都可以插值<code>#{...}</code></li>
+<li>都可以使用 <code>\</code> 来逃脱转义</li>
+<li>都支持 heredocs</li>
+</ul>
+<h4 id="Heredocs"><a href="#Heredocs" class="headerlink" title="Heredocs"></a>Heredocs</h4><p>多行文本。<br>使用 <code>IO.write</code> 输出多行文本，使用 <code>IO.puts</code> 输出单行，因为 puts 会在输出后面加换行符。</p>
+<p>heredocs 的语法 <code>&#39;&#39;&#39; 或者 &quot;&quot;&quot;</code></p>
+<h4 id="Sigils"><a href="#Sigils" class="headerlink" title="Sigils"></a>Sigils</h4><p>魔法标记，类比 ruby。<br>我们已经使用过 <code>~r{...}</code> 表示正则表达式，<br>魔法标记的语法，以 <code>~</code> 开始，然后是大小写都可以的字母，然后是边界符号，可以是 `&lt;…&gt;, {…}, […], (…), |…|, /…/, “…”, ‘…’等。</p>
+<p>决定魔法标记的字母有如下这些：</p>
+<ul>
+<li>~C 没有转义和插值的字符列表</li>
+<li>~c 有转义和插值的跟单引号字符串类似 </li>
+<li>~D Date，格式化为<code>yyyy-mm-dd</code></li>
+<li>~N 简单的 DateTime，格式化为`yyyy-mm-dd hh:mm:ss[.ddd]</li>
+<li>~R 没有转义和插值的正则表达式</li>
+<li>~r 有转义和插值的正则表达式</li>
+<li>~S 没有转义和插值的字符串</li>
+<li>~s 有转义和插值的字符串</li>
+<li>~T Time, 格式化为 <code>hh:mm:ss[.dddd]</code></li>
+<li>~W 没有转义和插值的单词列表</li>
+<li>~w 有转义和插值的单词列表</li>
+</ul>
+<p>看看例子就知道了：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; ~C[<span class="number">1</span>\n2<span class="comment">#&#123;1+2&#125;] </span></span><br><span class="line"><span class="string">'1\\n2\#&#123;1+2&#125;'</span></span><br><span class="line">iex&gt; ~c<span class="string">"1\n2<span class="subst">#&#123;<span class="number">1</span>+<span class="number">2</span>&#125;</span>"</span> </span><br><span class="line"><span class="string">'1\n23'</span></span><br><span class="line">iex&gt; ~S[<span class="number">1</span>\n2<span class="comment">#&#123;1+2&#125;] </span></span><br><span class="line"><span class="string">"1\\n2\#&#123;1+2&#125;"</span></span><br><span class="line">iex&gt; ~s/<span class="number">1</span>\n2<span class="comment">#&#123;1+2&#125;/ </span></span><br><span class="line"><span class="string">"1\n23"</span></span><br><span class="line">iex&gt; ~W[the c<span class="comment">#&#123;'a'&#125;t sat on the mat]</span></span><br><span class="line">[<span class="string">"the"</span>, <span class="string">"c\#&#123;'a'&#125;t"</span>, <span class="string">"sat"</span>, <span class="string">"on"</span>, <span class="string">"the"</span>, <span class="string">"mat"</span>]</span><br><span class="line">iex&gt; ~w[the c<span class="comment">#&#123;'a'&#125;t sat on the mat]</span></span><br><span class="line">[<span class="string">"the"</span>, <span class="string">"cat"</span>, <span class="string">"sat"</span>, <span class="string">"on"</span>, <span class="string">"the"</span>, <span class="string">"mat"</span>]</span><br><span class="line">iex&gt; ~D&lt;<span class="number">1999</span>-<span class="number">12</span>-<span class="number">31</span>&gt;</span><br><span class="line">~D[<span class="number">1999</span>-<span class="number">12</span>-<span class="number">31</span>]</span><br><span class="line">iex&gt; ~T[<span class="number">12</span><span class="symbol">:</span><span class="number">34</span><span class="symbol">:</span><span class="number">56</span>]</span><br><span class="line">~T[<span class="number">12</span><span class="symbol">:</span><span class="number">34</span><span class="symbol">:</span><span class="number">56</span>]</span><br><span class="line">iex&gt; ~N&#123;<span class="number">1999</span>-<span class="number">12</span>-<span class="number">31</span> <span class="number">23</span><span class="symbol">:</span><span class="number">59</span><span class="symbol">:</span><span class="number">59</span>&#125;</span><br><span class="line">~N[<span class="number">1999</span>-<span class="number">12</span>-<span class="number">31</span> <span class="number">23</span><span class="symbol">:</span><span class="number">59</span><span class="symbol">:</span><span class="number">59</span>]</span><br></pre></td></tr></table></figure>
+<p><code>~W 和 ~w</code> 还可以带选项，<code>a, c, s</code>表示元素的类型为 <code>atoms, list, 还是 string</code></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; ~w[the c<span class="comment">#&#123;'a'&#125;t sat on the mat]a </span></span><br><span class="line">[<span class="symbol">:the</span>, <span class="symbol">:cat</span>, <span class="symbol">:sat</span>, <span class="symbol">:on</span>, <span class="symbol">:the</span>, <span class="symbol">:mat</span>] </span><br><span class="line">iex&gt; ~w[the c<span class="comment">#&#123;'a'&#125;t sat on the mat]c</span></span><br><span class="line">[<span class="string">'the'</span>, <span class="string">'cat'</span>, <span class="string">'sat'</span>, <span class="string">'on'</span>, <span class="string">'the'</span>, <span class="string">'mat'</span>]</span><br><span class="line">iex&gt; ~w[the c<span class="comment">#&#123;'a'&#125;t sat on the mat]s </span></span><br><span class="line">[<span class="string">"the"</span>, <span class="string">"cat"</span>, <span class="string">"sat"</span>, <span class="string">"on"</span>, <span class="string">"the"</span>, <span class="string">"mat"</span>]</span><br></pre></td></tr></table></figure>
+<p>如果边界符号为 <code>&#39;&#39;&#39;</code> 或者 <code>&quot;&quot;&quot;</code>，等同 heredoc 对待，结果跟字符串的一样。</p>
+<h3 id="The-Name-“strings”"><a href="#The-Name-“strings”" class="headerlink" title="The Name “strings”"></a>The Name “strings”</h3><p>在 Elixir 中，我们一般叫双引号的为 strings（字符串），单引号的为字符列表。</p>
+<h3 id="Single-Quoted-Strings-–-Lists-of-Character-Codes"><a href="#Single-Quoted-Strings-–-Lists-of-Character-Codes" class="headerlink" title="Single-Quoted Strings – Lists of Character Codes"></a>Single-Quoted Strings – Lists of Character Codes</h3><p>单引号的字符串其实是一串整数值，每个值表示 ASCII 码中对应的字符，鉴于此，我们通常称其为字符列表（character lists）。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; str = <span class="string">'wombat'</span></span><br><span class="line"><span class="string">'wombat'</span></span><br><span class="line">iex&gt; is_list str</span><br><span class="line"><span class="keyword">true</span></span><br><span class="line">iex&gt; length str</span><br><span class="line"><span class="number">6</span></span><br><span class="line">iex&gt; Enum.reverse str</span><br><span class="line"><span class="string">'tabmow'</span></span><br></pre></td></tr></table></figure>
+<p>这里容易产生困惑，iex 中输出的是字符串，这是因为 iex 中打印整数的 list 就会将其转为字符后输出。<br>比如 <code>iex&gt; [67, 65, 84]</code> 输出 ‘CAT’</p>
+<p>当然，你也可以直接看它的数字表示：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; str = <span class="string">'wombat'</span></span><br><span class="line"><span class="string">'wombat'</span></span><br><span class="line">iex&gt; <span class="symbol">:io</span>.format <span class="string">"~w~n"</span>, [ str ] </span><br><span class="line">[<span class="number">119</span>,<span class="number">111</span>,<span class="number">109</span>,<span class="number">98</span>,<span class="number">97</span>,<span class="number">116</span>]</span><br><span class="line"><span class="symbol">:ok</span></span><br><span class="line">iex&gt; List.to_tuple str</span><br><span class="line">&#123;<span class="number">119</span>, <span class="number">111</span>, <span class="number">109</span>, <span class="number">98</span>, <span class="number">97</span>, <span class="number">116</span>&#125; </span><br><span class="line">iex&gt; str ++ [<span class="number">0</span>]</span><br><span class="line">[<span class="number">119</span>, <span class="number">111</span>, <span class="number">109</span>, <span class="number">98</span>, <span class="number">97</span>, <span class="number">116</span>, <span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<p><code>~w</code> 符号让 string 以 Elixir 的方式格式化，<code>~n</code>表示新行。<br>最后面那个例子创建了一个新的字符列表，列表最后是一个 null 字节。iex 知道有字节不可打印，所以返回了整数列表形式。</p>
+<p>同理 <code>&#39;∂x/∂y&#39; #=&gt; [8706, 120, 47, 121]</code> </p>
+<p>因为字符列表也是列表，所以也可以使用模式匹配以及 List 函数。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; <span class="string">'pole'</span> ++ <span class="string">'vault'</span> </span><br><span class="line"><span class="string">'polevault'</span></span><br><span class="line">iex&gt; <span class="string">'pole'</span> -- <span class="string">'vault'</span> </span><br><span class="line"><span class="string">'poe'</span></span><br><span class="line">iex&gt; List.zip [ <span class="string">'abc'</span>, <span class="string">'123'</span> ] </span><br><span class="line">[&#123;<span class="number">97</span>, <span class="number">49</span>&#125;, &#123;<span class="number">98</span>, <span class="number">50</span>&#125;, &#123;<span class="number">99</span>, <span class="number">51</span>&#125;] </span><br><span class="line">iex&gt; [ head | tail ] = <span class="string">'cat'</span> <span class="string">'cat'</span></span><br><span class="line">iex&gt; head </span><br><span class="line"><span class="number">99</span></span><br><span class="line">iex&gt; tail </span><br><span class="line"><span class="string">'at'</span></span><br><span class="line">iex&gt; [ head | tail ] </span><br><span class="line"><span class="string">'cat'</span></span><br></pre></td></tr></table></figure>
+<p>事实上，符号 <code>?c</code> 会返回字符 c 的整数表示。来看个例子：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># strings/ parse.exs</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Parse</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">number</span></span>([ ?- | tail ]), <span class="symbol">do:</span> _number_digits(tail, <span class="number">0</span>) * -<span class="number">1</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">number</span></span>([ ?+ | tail ]), <span class="symbol">do:</span> _number_digits(tail, <span class="number">0</span>)</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">number</span></span>(str), <span class="symbol">do:</span> _number_digits(str, <span class="number">0</span>)</span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_number_digits</span></span>([], value), <span class="symbol">do:</span> value</span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_number_digits</span></span>([ digit | tail], value)</span><br><span class="line">  <span class="keyword">when</span> digit <span class="keyword">in</span> <span class="string">'0123456789'</span> <span class="keyword">do</span></span><br><span class="line">    _number_digits(tail, value * <span class="number">10</span> + digit - ?<span class="number">0</span>)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_number_digits</span></span>([ non_digit | <span class="number">_</span>], <span class="number">_</span>) <span class="keyword">do</span></span><br><span class="line">    raise <span class="string">"Invalid digit '<span class="subst">#&#123;[non_digit]&#125;</span>'"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>测试：</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; c(<span class="string">"parse.exs"</span>)</span><br><span class="line">iex&gt; Parse.number(<span class="string">'123'</span>)</span><br><span class="line"><span class="number">123</span></span><br><span class="line">iex&gt; Parse.number(<span class="string">'-123'</span>)</span><br><span class="line">-<span class="number">123</span></span><br><span class="line">iex&gt; Parse.number(<span class="string">'+123'</span>)</span><br><span class="line"><span class="number">123</span></span><br><span class="line">iex&gt; Parse.number(<span class="string">'+9'</span>)</span><br><span class="line"><span class="number">9</span></span><br><span class="line">iex&gt; Parse.number(<span class="string">'+a'</span>)</span><br><span class="line">**  (RuntimeError) Invalid digit <span class="string">'a'</span></span><br></pre></td></tr></table></figure>
+<h3 id="Binaries"><a href="#Binaries" class="headerlink" title="Binaries"></a>Binaries</h3><p>二进制类型字面表示为： <code>&lt;&lt; term, ...&gt;&gt;</code></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; b = &lt;&lt; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span> &gt;&gt; </span><br><span class="line">&lt;&lt;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&gt;&gt;</span><br><span class="line">iex&gt; byte_size b</span><br><span class="line"><span class="number">3</span></span><br><span class="line">iex&gt; bit_size b </span><br><span class="line"><span class="number">24</span></span><br></pre></td></tr></table></figure>
+<p>你可以指定二进制项的大小（bits）。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; b = &lt;&lt; <span class="number">1</span>::size(<span class="number">2</span>), <span class="number">1</span>::size(<span class="number">3</span>) &gt;&gt; <span class="comment"># 01 001</span></span><br><span class="line">&lt;&lt;<span class="number">9</span>::size(<span class="number">5</span>)&gt;&gt; <span class="comment"># = 9 (base 10)</span></span><br><span class="line">iex&gt; byte_size b</span><br><span class="line"><span class="number">1</span></span><br><span class="line">iex&gt; bit_size b</span><br><span class="line"><span class="number">5</span></span><br></pre></td></tr></table></figure>
+<p>在 binaries 中，你可以使用 integer， floats 还有其他 binaries </p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; int = &lt;&lt; <span class="number">1</span> &gt;&gt;</span><br><span class="line">&lt;&lt;<span class="number">1</span>&gt;&gt;</span><br><span class="line">iex&gt; float = &lt;&lt; <span class="number">2.5</span> :: float &gt;&gt;</span><br><span class="line">&lt;&lt;<span class="number">64</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>&gt;&gt;</span><br><span class="line">iex&gt; mix = &lt;&lt; int :: binary, float :: binary &gt;&gt; </span><br><span class="line">&lt;&lt;<span class="number">1</span>, <span class="number">64</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>&gt;&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="Double-Quoted-Strings-Are-Binaries"><a href="#Double-Quoted-Strings-Are-Binaries" class="headerlink" title="Double Quoted Strings Are Binaries"></a>Double Quoted Strings Are Binaries</h3><p>双引号字符串是以UTF-8 编码的连续的字节中的，这样在内存中的效率会更高，所以有两点要注意。</p>
+<p>一, 因为 UTF-8 字符不止一个字节来表示，二进制的长度不一定是string 的长度。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; dqs = <span class="string">"∂x/∂y"</span></span><br><span class="line">iex&gt; String.length dqs</span><br><span class="line"><span class="number">5</span></span><br><span class="line">iex&gt; byte_size dqs</span><br><span class="line"><span class="number">9</span></span><br><span class="line">iex&gt; String.at(dqs, <span class="number">0</span>)</span><br><span class="line"><span class="string">"∂"</span></span><br><span class="line">iex&gt;  String.codepoints(dqs)</span><br><span class="line">[<span class="string">"∂"</span>, <span class="string">"x"</span>, <span class="string">"/"</span>, <span class="string">"∂"</span>, <span class="string">"y"</span>]</span><br><span class="line">iex&gt; String.split(dqs, <span class="string">"/"</span>) </span><br><span class="line">[<span class="string">"∂x"</span>, <span class="string">"∂y"</span>]</span><br></pre></td></tr></table></figure>
+<p>二，因为不是使用 list 了，你需要使用 binary 的语法。</p>
+<h4 id="Strings-and-Elixir-Libraries"><a href="#Strings-and-Elixir-Libraries" class="headerlink" title="Strings and Elixir Libraries"></a>Strings and Elixir Libraries</h4><p>在 Elixir 文档中使用的单词 string 一般指 双引号的 string。</p>
+<p><code>String</code> 模块定义了操作 string 的函数。</p>
+<p><code>at(str, offset)</code> 返回指定下标的字符</p>
+<p><code>capitalize(str)</code> 首字符大写，其他小写</p>
+<p><code>codepoints(str)</code> 返回 str 的 字符列表。</p>
+<p><code>downcase(str)</code> 返回 str 的小写形式</p>
+<p><code>duplicate(str, n)</code> 返回 复制了 n 遍 str 的字符串</p>
+<p><code>ends_with?(str, suffix | [suffixes])</code> 如果以某些个后缀结尾则返回 true</p>
+<p><code>first(str)</code> 返回第一个字符</p>
+<p><code>graphemes(str)</code> 以最小有意义的单元分割字符串，返回列表。</p>
+<p><code>jaro_distance</code> 返回 两字符串的相似程度，值在 0 - 1 之间。</p>
+<p><code>last(str)</code> 返回最后的字符</p>
+<p><code>length(str)</code> 返回字符串长度</p>
+<p><code>myers_difference</code> 返回从一个字符串转变到另一个字符串的所有操作。</p>
+<p><code>next_codepoint(str)</code> 返回 <code>{codepoint, rest}</code> codepoint 为 str 的首字符。</p>
+<p><code>next_grapheme(str)</code> 同 <code>next_codepoint</code>。</p>
+<p><code>pad_leading(str, new_length, padding \\ 32)</code> 字符填充，填充在左边。</p>
+<p><code>pad_trailing(str, new_length, padding \\ &quot; &quot;)</code> 字符填充，填充在右边。</p>
+<p><code>printable?(str)</code> 如果所有字符都是可以打印的，返回 true。</p>
+<p><code>replace(str, pattern, replacement, options \\ [global: true, insert_replaced: nil])</code> 字符替换。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">iex&gt; String.replace <span class="string">"the cat on the mat"</span>, <span class="string">"at"</span>, <span class="string">"AT"</span></span><br><span class="line"><span class="string">"the cAT on the mAT"</span></span><br><span class="line">iex&gt; String.replace <span class="string">"the cat on the mat"</span>, <span class="string">"at"</span>, <span class="string">"AT"</span>, <span class="symbol">global:</span> <span class="keyword">false</span></span><br><span class="line"><span class="string">"the cAT on the mat"</span></span><br><span class="line">iex&gt; String.replace <span class="string">"the cat on the mat"</span>, <span class="string">"at"</span>, <span class="string">"AT"</span>, <span class="symbol">insert_replaced:</span> <span class="number">0</span> </span><br><span class="line"><span class="string">"the catAT on the matAT"</span></span><br><span class="line">iex&gt; String.replace <span class="string">"the cat on the mat"</span>, <span class="string">"at"</span>, <span class="string">"AT"</span>, <span class="symbol">insert_replaced:</span> [<span class="number">0</span>,<span class="number">2</span>] </span><br><span class="line"><span class="string">"the catATat on the matATat"</span></span><br></pre></td></tr></table></figure>
+<p><code>reverse(str)</code> 反转字符</p>
+<p><code>slice(str, offset, len)</code> 字符串截取</p>
+<p><code>split(str, pattern \\ nil, options \\ [global: true])</code> 字符串分割</p>
+<p><code>starts_with?(str, prefix | [ prefixes ])</code> 以某些个字符串开头则返回 true</p>
+<p><code>trim(str)</code> 去掉首尾的空串</p>
+<p><code>trim(str, character)</code> 去掉首尾的某个字符</p>
+<p><code>trim_leading(str)</code> 去掉首部的空串</p>
+<p><code>trim_leading(str, character)</code> 去掉首部的字符</p>
+<p><code>trim_trailing(str)</code> 去掉尾部的空串</p>
+<p><code>trim_trailing(str, character)</code> 去掉尾部的字符</p>
+<p><code>upcase(str)</code> 转大写</p>
+<p><code>valid?(str)</code> str 只有一个合法的字符 则返回 true</p>
+<h3 id="Binaries-and-Pattern-Matching"><a href="#Binaries-and-Pattern-Matching" class="headerlink" title="Binaries and Pattern Matching"></a>Binaries and Pattern Matching</h3><p>首先要记住 “如果你怀疑，指定类型先”，可用的类型有 binary, bits, bitstring, bytes, float, integer, utf8, utf16, utf32 等。而且你可以加上修饰符。</p>
+<ul>
+<li>size(n): bits 的大小。</li>
+<li>signed 或者 unsigned，对于 integer 字段，是否有符号。</li>
+<li>其他： big, little, native</li>
+</ul>
+<p><code>&lt;&lt; length::unsigned-integer-size(12), flags::bitstring-size(4) &gt;&gt;  = data</code></p>
+<h4 id="String-Processing-with-Binaries"><a href="#String-Processing-with-Binaries" class="headerlink" title="String Processing with Binaries"></a>String Processing with Binaries</h4><p>同 list 一样，同样可以匹配 首尾。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># strings/utf-iterate.ex</span></span><br><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">Utf8</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">each</span></span>(str, func) <span class="keyword">when</span> is_binary(str), <span class="symbol">do:</span> _each(str, func)</span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_each</span></span>(&lt;&lt; head :: utf8, tail :: binary &gt;&gt;, func) <span class="keyword">do</span></span><br><span class="line">    func.(head)</span><br><span class="line">    _each(tail, func)</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">defp</span> <span class="title">_each</span></span>(&lt;&lt;&gt;&gt;, _func), <span class="symbol">do:</span> []</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">Utf8.each <span class="string">"∂og"</span>, <span class="keyword">fn</span> char -&gt; IO.puts char <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># =&gt; </span></span><br><span class="line"><span class="number">8706</span></span><br><span class="line"><span class="number">111</span></span><br><span class="line"><span class="number">103</span></span><br></pre></td></tr></table></figure>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Strings-and-Binaries"><span class="toc-number">1.</span> <span class="toc-text">Strings and Binaries</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#string-Literals"><span class="toc-number">1.1.</span> <span class="toc-text">string Literals</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Heredocs"><span class="toc-number">1.1.1.</span> <span class="toc-text">Heredocs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Sigils"><span class="toc-number">1.1.2.</span> <span class="toc-text">Sigils</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#The-Name-“strings”"><span class="toc-number">1.2.</span> <span class="toc-text">The Name “strings”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Single-Quoted-Strings-–-Lists-of-Character-Codes"><span class="toc-number">1.3.</span> <span class="toc-text">Single-Quoted Strings – Lists of Character Codes</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Binaries"><span class="toc-number">1.4.</span> <span class="toc-text">Binaries</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Double-Quoted-Strings-Are-Binaries"><span class="toc-number">1.5.</span> <span class="toc-text">Double Quoted Strings Are Binaries</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Strings-and-Elixir-Libraries"><span class="toc-number">1.5.1.</span> <span class="toc-text">Strings and Elixir Libraries</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Binaries-and-Pattern-Matching"><span class="toc-number">1.6.</span> <span class="toc-text">Binaries and Pattern Matching</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#String-Processing-with-Binaries"><span class="toc-number">1.6.1.</span> <span class="toc-text">String Processing with Binaries</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&text=elixir strings and binaries"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&title=elixir strings and binaries"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&is_video=false&description=elixir strings and binaries"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=elixir strings and binaries&body=Check out this article: https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&title=elixir strings and binaries"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&title=elixir strings and binaries"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&title=elixir strings and binaries"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&title=elixir strings and binaries"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/01/16/elixir/2018-01-16-elixir-strings-and-binaries/&name=elixir strings and binaries&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2018 lichengzhi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/projects_url">Projects</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
