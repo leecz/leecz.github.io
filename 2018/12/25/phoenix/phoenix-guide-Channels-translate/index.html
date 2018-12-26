@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Chris Young&#39;s Blog">
 <meta property="og:description" content="Channels 是 Phoenix 中对 Web 实时通讯技术的一种封装 客户端连接，然后订阅一个或多个 Topic ，不管是服务端还是客户端给这个 Topic 发消息，订阅这个 Topic 的都将接收到消息。 Overview要建立通讯，客户端需要与服务器端的一个节点建立连接，使用 websockets 或者 长轮询，加入一个或多个 channel 都使用同一个网络连接。每个客户端，每个 To">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-26T05:18:07.040Z">
+<meta property="og:updated_time" content="2018-12-26T05:19:16.828Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="phoenix guide Channels translate">
 <meta name="twitter:description" content="Channels 是 Phoenix 中对 Web 实时通讯技术的一种封装 客户端连接，然后订阅一个或多个 Topic ，不管是服务端还是客户端给这个 Topic 发消息，订阅这个 Topic 的都将接收到消息。 Overview要建立通讯，客户端需要与服务器端的一个节点建立连接，使用 websockets 或者 长轮询，加入一个或多个 channel 都使用同一个网络连接。每个客户端，每个 To">
@@ -170,7 +170,6 @@
 <p>PubSub由 <code>Phoenix.PubSub</code> 模块和各种适配器及其 GenServers 的模块组成。这些模块包含组织 Channel 通信的基本功能 - 订阅主题，取消订阅主题，以及广播主题消息。</p>
 <p>PubSub系统还负责将消息从一个节点传递到另一个节点，以便可以将其发送到整个群集中的所有订户。默认情况下，这是使用 <code>Phoenix.PubSub.PG2</code> 完成的，它使用原生 BEAM 消息传递。</p>
 <p>如果您的部署环境不支持分布式Elixir或服务器之间的直接通信，Phoenix还附带一个Redis适配器，该适配器使用Redis交换PubSub数据。有关更多信息，请参阅Phoenix.PubSub文档。</p>
-<p>​</p>
 <h2 id="Trying-it-all-together"><a href="#Trying-it-all-together" class="headerlink" title="Trying it all together"></a>Trying it all together</h2><p>一起来将上面的这些想法实际应用起来。</p>
 <p>在新生成的项目中，endpoint 已经做好了相关设置 lib/hello_web/endpoint.ex：</p>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">defmodule</span> <span class="title">HelloWeb.Endpoint</span></span> <span class="keyword">do</span></span><br><span class="line">  <span class="keyword">use</span> Phoenix.Endpoint, <span class="symbol">otp_app:</span> <span class="symbol">:hello</span></span><br><span class="line">  socket <span class="string">"/socket"</span>, HelloWeb.UserSocket</span><br><span class="line">  ...</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
