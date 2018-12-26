@@ -9,14 +9,14 @@
     <meta name="description" content="Channels 是 Phoenix 中对 Web 实时通讯技术的一种封装 客户端连接，然后订阅一个或多个 Topic ，不管是服务端还是客户端给这个 Topic 发消息，订阅这个 Topic 的都将接收到消息。 Overview要建立通讯，客户端需要与服务器端的一个节点建立连接，使用 websockets 或者 长轮询，加入一个或多个 channel 都使用同一个网络连接。每个客户端，每个 To">
 <meta name="keywords" content="phoenix,channels">
 <meta property="og:type" content="article">
-<meta property="og:title" content="phoenix guide Channels translate">
+<meta property="og:title" content="Phoenix Guide Channels 翻译">
 <meta property="og:url" content="https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/index.html">
 <meta property="og:site_name" content="Chris Young&#39;s Blog">
 <meta property="og:description" content="Channels 是 Phoenix 中对 Web 实时通讯技术的一种封装 客户端连接，然后订阅一个或多个 Topic ，不管是服务端还是客户端给这个 Topic 发消息，订阅这个 Topic 的都将接收到消息。 Overview要建立通讯，客户端需要与服务器端的一个节点建立连接，使用 websockets 或者 长轮询，加入一个或多个 channel 都使用同一个网络连接。每个客户端，每个 To">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-26T05:19:16.828Z">
+<meta property="og:updated_time" content="2018-12-26T05:20:35.963Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="phoenix guide Channels translate">
+<meta name="twitter:title" content="Phoenix Guide Channels 翻译">
 <meta name="twitter:description" content="Channels 是 Phoenix 中对 Web 实时通讯技术的一种封装 客户端连接，然后订阅一个或多个 Topic ，不管是服务端还是客户端给这个 Topic 发消息，订阅这个 Topic 的都将接收到消息。 Overview要建立通讯，客户端需要与服务器端的一个节点建立连接，使用 websockets 或者 长轮询，加入一个或多个 channel 都使用同一个网络连接。每个客户端，每个 To">
     
     
@@ -37,7 +37,7 @@
         
     
     <!-- title -->
-    <title>phoenix guide Channels translate</title>
+    <title>Phoenix Guide Channels 翻译</title>
     <!-- styles -->
     <link rel="stylesheet" href="/css/style.css">
     <!-- persian styles -->
@@ -88,15 +88,15 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&text=phoenix guide Channels translate"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=phoenix guide Channels translate"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&is_video=false&description=phoenix guide Channels translate"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=phoenix guide Channels translate&body=Check out this article: https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=phoenix guide Channels translate"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=phoenix guide Channels translate"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=phoenix guide Channels translate"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=phoenix guide Channels translate"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&name=phoenix guide Channels translate&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&text=Phoenix Guide Channels 翻译"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=Phoenix Guide Channels 翻译"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&is_video=false&description=Phoenix Guide Channels 翻译"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Phoenix Guide Channels 翻译&body=Check out this article: https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=Phoenix Guide Channels 翻译"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=Phoenix Guide Channels 翻译"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=Phoenix Guide Channels 翻译"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=Phoenix Guide Channels 翻译"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&name=Phoenix Guide Channels 翻译&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -113,7 +113,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        phoenix guide Channels translate
+        Phoenix Guide Channels 翻译
     </h1>
 
 
@@ -253,15 +253,15 @@
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&text=phoenix guide Channels translate"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=phoenix guide Channels translate"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&is_video=false&description=phoenix guide Channels translate"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=phoenix guide Channels translate&body=Check out this article: https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=phoenix guide Channels translate"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=phoenix guide Channels translate"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=phoenix guide Channels translate"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=phoenix guide Channels translate"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&name=phoenix guide Channels translate&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&text=Phoenix Guide Channels 翻译"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=Phoenix Guide Channels 翻译"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&is_video=false&description=Phoenix Guide Channels 翻译"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Phoenix Guide Channels 翻译&body=Check out this article: https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=Phoenix Guide Channels 翻译"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=Phoenix Guide Channels 翻译"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=Phoenix Guide Channels 翻译"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&title=Phoenix Guide Channels 翻译"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2018/12/25/phoenix/phoenix-guide-Channels-translate/&name=Phoenix Guide Channels 翻译&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
