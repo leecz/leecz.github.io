@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Chris Young&#39;s Blog">
 <meta property="og:description" content="Contexts到目前为止，我们已经构建了页面，通过我们的路由器连接 Controller 和 Actions ，并了解了 Ecto 如何验证和存储数据。 现在是时候将这些东西整合起来，使用 Elixir 来编写 Web 的一些功能。 在构建Phoenix项目时，我们首先构建一个 Elixir 应用程序。 Phoenix 的工作是为我们的 Elixir 应用程序提供 Web 接口。 当然，我们使用">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-01-02T15:07:08.048Z">
+<meta property="og:updated_time" content="2019-01-02T15:09:59.725Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Phoenix Guide Contexts Translate">
 <meta name="twitter:description" content="Contexts到目前为止，我们已经构建了页面，通过我们的路由器连接 Controller 和 Actions ，并了解了 Ecto 如何验证和存储数据。 现在是时候将这些东西整合起来，使用 Elixir 来编写 Web 的一些功能。 在构建Phoenix项目时，我们首先构建一个 Elixir 应用程序。 Phoenix 的工作是为我们的 Elixir 应用程序提供 Web 接口。 当然，我们使用">
@@ -163,7 +163,7 @@
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">scope <span class="string">"/"</span>, HelloWeb <span class="keyword">do</span></span><br><span class="line">  pipe_through <span class="symbol">:browser</span></span><br><span class="line"></span><br><span class="line">  get <span class="string">"/"</span>, PageController, <span class="symbol">:index</span></span><br><span class="line">  resources <span class="string">"/users"</span>, UserController</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 <p>设置好新 route, Phoenix 提醒我们执行 <code>mix ecto.migrate</code> 来更新 repo。现在：</p>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>mix ecto.migrate</span><br><span class="line"></span><br><span class="line">[info]  == Running Hello.Repo.Migrations.CreateUsers.change/<span class="number">0</span> forward</span><br><span class="line"></span><br><span class="line">[info]  create table users</span><br><span class="line"></span><br><span class="line">[info]  create index users_username_index</span><br><span class="line"></span><br><span class="line">[info]  == Migrated <span class="keyword">in</span> <span class="number">0</span>.0s</span><br></pre></td></tr></table></figure>
-<p>Before we jump into the generated code, let’s start the server with mix phx.server and visit <a href="http://localhost:4000/users" target="_blank" rel="noopener">http://localhost:4000/users</a>. Let’s follow the “New User” link and click the “Submit” button without providing any input. We should be greeted with the following output:<br>在查看新代码之前，我们先运行 <code>mix phx.server</code> 来启动服务，然后访问 <code>http://localhost:4000/users</code>, 点击 <code>New User</code>, 不输入任何信息，将会得到下面的提示：</p>
+<p>在查看新代码之前，我们先运行 <code>mix phx.server</code> 来启动服务，然后访问 <code>http://localhost:4000/users</code>, 点击 <code>New User</code>, 不输入任何信息，将会得到下面的提示：</p>
 <blockquote>
 <p>Oops, something went wrong! Please check the errors below.</p>
 </blockquote>
