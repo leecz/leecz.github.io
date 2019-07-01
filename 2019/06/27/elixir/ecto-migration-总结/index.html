@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="Chris Young&#39;s Blog">
 <meta property="og:description" content="常用命令 mix ecto.gen.migration  1mix ecto.gen.migration add_posts_table  mix ecto.migrate执行 migration  mix ecto.rollback   1mix ecto.rollback -n 2  mix ecto.dump导出表结构  数据类型与 PostgreSQL 搭配的常用类型：  integer">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-27T23:31:18.287Z">
+<meta property="og:updated_time" content="2019-06-29T00:42:12.377Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ecto Migration 用法总结">
 <meta name="twitter:description" content="常用命令 mix ecto.gen.migration  1mix ecto.gen.migration add_posts_table  mix ecto.migrate执行 migration  mix ecto.rollback   1mix ecto.rollback -n 2  mix ecto.dump导出表结构  数据类型与 PostgreSQL 搭配的常用类型：  integer">
@@ -73,10 +73,10 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" href="/2019/06/27/JavaScript/生成svg缩略图/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" href="/2019/07/01/weibo/2019-07-summer/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
-        <li><a class="icon" href="/2019/06/26/JavaScript/js练习1/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        <li><a class="icon" href="/2019/06/27/JavaScript/生成svg缩略图/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
@@ -178,6 +178,7 @@
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rename table(<span class="symbol">:posts</span>), <span class="symbol">:title</span>, <span class="symbol">to:</span> <span class="symbol">:summary</span></span><br><span class="line">rename table(<span class="symbol">:posts</span>), <span class="symbol">to:</span> table(<span class="symbol">:new_posts</span>)</span><br><span class="line"></span><br><span class="line">drop table(<span class="symbol">:documents</span>)</span><br><span class="line">drop_if_exists table(<span class="symbol">:documents</span>)</span><br><span class="line"></span><br><span class="line">table(<span class="symbol">:documents</span>)</span><br><span class="line">table(<span class="symbol">:weather</span>, <span class="symbol">prefix:</span> <span class="symbol">:north_america</span>)</span><br></pre></td></tr></table></figure>
 <p>索引：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create index(:posts, [:slug], concurrently: true)</span><br><span class="line">create unique_index(:posts, [:slug])</span><br><span class="line">drop index(:posts, [:name])</span><br></pre></td></tr></table></figure>
+<p>暂时完</p>
 
   </div>
 </article>

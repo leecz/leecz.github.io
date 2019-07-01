@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Three Js 入门学习参考教程： 从零开始学习时空数据可视化(一) 本次学习目的：  初步了解 WebGL 的一些基本概念与 three.js 的基本内容；实战编写一个简单的几何体动画来熟悉 three.js 中的一些基本 API；  WebGL 是来自维基百科：  WebGL 是一种 JavaScript API，用于在不使用插件的情况下在任何兼容的网页浏览器中呈现交互式 2D 和 3D 图">
+<meta name="keywords" content="JavaScript,ThreeJs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="时空数据可视化学习01-ThreeJs入门">
+<meta property="og:url" content="https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/index.html">
+<meta property="og:site_name" content="Chris Young&#39;s Blog">
+<meta property="og:description" content="Three Js 入门学习参考教程： 从零开始学习时空数据可视化(一) 本次学习目的：  初步了解 WebGL 的一些基本概念与 three.js 的基本内容；实战编写一个简单的几何体动画来熟悉 three.js 中的一些基本 API；  WebGL 是来自维基百科：  WebGL 是一种 JavaScript API，用于在不使用插件的情况下在任何兼容的网页浏览器中呈现交互式 2D 和 3D 图">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-07-01T08:47:29.312Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="时空数据可视化学习01-ThreeJs入门">
+<meta name="twitter:description" content="Three Js 入门学习参考教程： 从零开始学习时空数据可视化(一) 本次学习目的：  初步了解 WebGL 的一些基本概念与 three.js 的基本内容；实战编写一个简单的几何体动画来熟悉 three.js 中的一些基本 API；  WebGL 是来自维基百科：  WebGL 是一种 JavaScript API，用于在不使用插件的情况下在任何兼容的网页浏览器中呈现交互式 2D 和 3D 图">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>时空数据可视化学习01-ThreeJs入门</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/07/01/weibo/2019-07-summer/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&text=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&title=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&is_video=false&description=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=时空数据可视化学习01-ThreeJs入门&body=Check out this article: https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&title=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&title=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&title=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&title=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&name=时空数据可视化学习01-ThreeJs入门&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Three-Js-入门学习"><span class="toc-number">1.</span> <span class="toc-text">Three Js 入门学习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#WebGL-是"><span class="toc-number">1.0.1.</span> <span class="toc-text">WebGL 是</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#检测浏览器用户环境是否支持-WebGL"><span class="toc-number">1.0.2.</span> <span class="toc-text">检测浏览器用户环境是否支持 WebGL ?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#清空画布"><span class="toc-number">1.0.3.</span> <span class="toc-text">清空画布</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Three-js-是"><span class="toc-number">1.0.4.</span> <span class="toc-text">Three js 是</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Demo-学习"><span class="toc-number">1.0.5.</span> <span class="toc-text">Demo 学习</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">1.0.6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-number">1.0.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope="" itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        时空数据可视化学习01-ThreeJs入门
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+        <span itemprop="name">Chris Young's Blog</span>
+      </span>
+      
+    <div class="postdate">
+        <time datetime="2019-07-01T03:11:11.000Z" itemprop="datePublished">2019-07-01</time>
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/JavaScript-ThreeJs/">JavaScript,ThreeJs</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="Three-Js-入门学习"><a href="#Three-Js-入门学习" class="headerlink" title="Three Js 入门学习"></a>Three Js 入门学习</h1><p>参考教程： <a href="https://zhuanlan.zhihu.com/p/61350952" target="_blank" rel="noopener">从零开始学习时空数据可视化(一)</a></p>
+<p>本次学习目的：</p>
+<blockquote>
+<p>初步了解 WebGL 的一些基本概念与 three.js 的基本内容；<br>实战编写一个简单的几何体动画来熟悉 three.js 中的一些基本 API；</p>
+</blockquote>
+<h3 id="WebGL-是"><a href="#WebGL-是" class="headerlink" title="WebGL 是"></a>WebGL 是</h3><p>来自维基百科：</p>
+<blockquote>
+<p>WebGL 是一种 JavaScript API，用于在不使用插件的情况下在任何兼容的网页浏览器中呈现交互式 2D 和 3D 图形。WebGL 完全集成到浏览器的所有网页标准中，可将影像处理和效果的 GPU 加速使用方式当做网页 Canvas 的一部分。WebGL 元素可以加入其他 HTML 元素之中并与网页或网页背景的其他部分混合。WebGL 程序由 JavaScript 编写的句柄和 OpenGL Shading Language（GLSL）编写的着色器代码组成，该语言类似于 C 或 C++，并在计算机的图形处理器（GPU）上运行。WebGL 由非营利 Khronos Group 设计和维护。</p>
+</blockquote>
+<p>可以简单的理解为在 canvas 上绘图的一种协议，尤其是在 3D 领域。</p>
+<h3 id="检测浏览器用户环境是否支持-WebGL"><a href="#检测浏览器用户环境是否支持-WebGL" class="headerlink" title="检测浏览器用户环境是否支持 WebGL ?"></a>检测浏览器用户环境是否支持 WebGL ?</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> detectWebGLContext = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> canvas = <span class="built_in">document</span>.createElement(<span class="string">"canvas"</span>);</span><br><span class="line">  <span class="keyword">let</span> gl =</span><br><span class="line">    canvas.getContext(<span class="string">"webgl"</span>) || canvas.getContext(<span class="string">"experimental-webgl"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> msgTxt = <span class="string">"无法检测到 WebGL 上下文，你的浏览器不支持 WebGL。"</span>;</span><br><span class="line">  <span class="keyword">if</span> (gl &amp;&amp; gl <span class="keyword">instanceof</span> WebGLRenderingContext) &#123;</span><br><span class="line">    msgTxt = <span class="string">"恭喜，你的浏览器支持 WebGL！"</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  alert(msgTxt);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="清空画布"><a href="#清空画布" class="headerlink" title="清空画布"></a>清空画布</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> clearWithColor = <span class="function"><span class="params">gl</span> =&gt;</span> &#123;</span><br><span class="line">  gl.viewport(<span class="number">0</span>, <span class="number">0</span>, gl.drawingBufferWidth, gl.drawingBufferHeight);</span><br><span class="line"></span><br><span class="line">  gl.clearColor(<span class="number">0.0</span>, <span class="number">0.5</span>, <span class="number">0.0</span>, <span class="number">1.0</span>);</span><br><span class="line"></span><br><span class="line">  gl.clear(gl.COLOR_BUFFER_BIT);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="Three-js-是"><a href="#Three-js-是" class="headerlink" title="Three js 是"></a>Three js 是</h3><p>ThreeJs 是一个 JavaScript 库，封装了 WebGL 的 API。<br>Why ThreeJs ？<br>因为原生的 WebGL 的接口相当不直观，写起来非常繁琐，基本不是面向一般用户使用的。<br>ThreeJs 在顶层对 3D 绘图所需的各种元素（例如场景，摄像机，灯光，几何图像，材质等）进行了封装。</p>
+<p>ThreeJs 中最小绘图环境包含 3 个要素：</p>
+<ol>
+<li>场景 – 包含所有需要显示的 3D 物体以及其他相关元素的容器</li>
+<li>摄像机 – 决定 3D 场景如何投影到 2D 画布之上</li>
+<li>渲染器 – 用于最后绘制的画笔</li>
+</ol>
+<p>想了解某个参数的含义，可以使用 在线 ThreeJs 编辑器: <a href="https://threejs.org/editor/" target="_blank" rel="noopener">https://threejs.org/editor/</a></p>
+<h3 id="Demo-学习"><a href="#Demo-学习" class="headerlink" title="Demo 学习"></a>Demo 学习</h3><p>Demo 完整代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"X-UA-Compatible"</span> <span class="attr">content</span>=<span class="string">"ie=edge"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>时空数据可视化1<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">      body &#123;</span></span><br><span class="line"><span class="undefined">        background: #fff;</span></span><br><span class="line"><span class="undefined">        padding: 0;</span></span><br><span class="line"><span class="undefined">        margin: 0;</span></span><br><span class="line"><span class="undefined">        overflow: hidden;</span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="undefined">      #glmapsTitle &#123;</span></span><br><span class="line"><span class="undefined">        position: absolute;</span></span><br><span class="line"><span class="undefined">        left: 5px;</span></span><br><span class="line"><span class="undefined">        top: 5px;</span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"glmapsTitle"</span>&gt;</span></span><br><span class="line">      从零开始学习时空数据可视化示例</span><br><span class="line">      <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://github.com/hijiangtao/glmaps"</span>&gt;</span>GitHub 代码地址<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span></span></span><br><span class="line"><span class="tag">      <span class="attr">src</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/three.js/103/three.min.js"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">integrity</span>=<span class="string">"sha256-T4lfPbatZLyNhpEgCvtmXmlhOUq0HZHkDX4cMlQWExA="</span></span></span><br><span class="line"><span class="tag">      <span class="attr">crossorigin</span>=<span class="string">"anonymous"</span></span></span><br><span class="line"><span class="tag">    &gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">      <span class="keyword">let</span> camera, scene, renderer, group;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">let</span> mouseX = <span class="number">0</span>,</span></span><br><span class="line"><span class="undefined">        mouseY = 0;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">let</span> windowHalfX = <span class="built_in">window</span>.innerWidth / <span class="number">2</span>;</span></span><br><span class="line"><span class="javascript">      <span class="keyword">let</span> windowHalfY = <span class="built_in">window</span>.innerHeight / <span class="number">2</span>;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">      <span class="comment">// 初始化函数</span></span></span><br><span class="line"><span class="javascript">      <span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 创建相机</span></span></span><br><span class="line"><span class="javascript">        camera = <span class="keyword">new</span> THREE.PerspectiveCamera(</span></span><br><span class="line"><span class="undefined">          60,</span></span><br><span class="line"><span class="javascript">          <span class="built_in">window</span>.innerWidth / <span class="built_in">window</span>.innerHeight,</span></span><br><span class="line"><span class="undefined">          1,</span></span><br><span class="line"><span class="undefined">          10000</span></span><br><span class="line"><span class="undefined">        );</span></span><br><span class="line"><span class="undefined">        camera.position.z = 500;</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 创建场景</span></span></span><br><span class="line"><span class="javascript">        scene = <span class="keyword">new</span> THREE.Scene();</span></span><br><span class="line"><span class="javascript">        scene.background = <span class="keyword">new</span> THREE.Color(<span class="number">0xffffff</span>);</span></span><br><span class="line"><span class="javascript">        scene.fog = <span class="keyword">new</span> THREE.Fog(<span class="number">0xffffff</span>, <span class="number">1</span>, <span class="number">10000</span>);</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 创建对象组，向组内添加1000个随机分布的网格对象</span></span></span><br><span class="line"><span class="javascript">        <span class="comment">// Mesh https://threejs.org/docs/index.html#api/en/objects/Mesh</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> geometry = <span class="keyword">new</span> THREE.BoxBufferGeometry(<span class="number">100</span>, <span class="number">100</span>, <span class="number">100</span>);</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> material = <span class="keyword">new</span> THREE.MeshNormalMaterial();</span></span><br><span class="line"><span class="javascript">        group = <span class="keyword">new</span> THREE.Group();</span></span><br><span class="line"><span class="javascript">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; i++) &#123;</span></span><br><span class="line"><span class="javascript">          <span class="keyword">let</span> mesh = <span class="keyword">new</span> THREE.Mesh(geometry, material);</span></span><br><span class="line"><span class="javascript">          mesh.position.x = <span class="built_in">Math</span>.random() * <span class="number">2000</span> - <span class="number">1000</span>;</span></span><br><span class="line"><span class="javascript">          mesh.position.y = <span class="built_in">Math</span>.random() * <span class="number">2000</span> - <span class="number">1000</span>;</span></span><br><span class="line"><span class="javascript">          mesh.position.z = <span class="built_in">Math</span>.random() * <span class="number">2000</span> - <span class="number">1000</span>;</span></span><br><span class="line"><span class="javascript">          mesh.rotation.x = <span class="built_in">Math</span>.random() * <span class="number">2</span> * <span class="built_in">Math</span>.PI;</span></span><br><span class="line"><span class="javascript">          mesh.rotation.y = <span class="built_in">Math</span>.random() * <span class="number">2</span> * <span class="built_in">Math</span>.PI;</span></span><br><span class="line"><span class="javascript">          mesh.matrixAutoUpdate = <span class="literal">false</span>;</span></span><br><span class="line"><span class="undefined">          mesh.updateMatrix();</span></span><br><span class="line"><span class="undefined">          group.add(mesh);</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 将对象组添加到场景中</span></span></span><br><span class="line"><span class="undefined">        scene.add(group);</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 构建渲染器，并将其 canvas 对象添加至 body</span></span></span><br><span class="line"><span class="javascript">        renderer = <span class="keyword">new</span> THREE.WebGLRenderer(&#123; <span class="attr">antialias</span>: <span class="literal">true</span> &#125;);</span></span><br><span class="line"><span class="javascript">        renderer.setPixelRatio(<span class="built_in">window</span>.devicePixelRatio);</span></span><br><span class="line"><span class="javascript">        renderer.setSize(<span class="built_in">window</span>.innerWidth, <span class="built_in">window</span>.innerHeight);</span></span><br><span class="line"><span class="javascript">        <span class="built_in">document</span>.body.appendChild(renderer.domElement);</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 注册事件响应</span></span></span><br><span class="line"><span class="javascript">        <span class="comment">// document.addEventListener('mousemove', onDocumentMouseMove, false);</span></span></span><br><span class="line"><span class="javascript">        <span class="built_in">window</span>.addEventListener(<span class="string">"resize"</span>, onWindowResize, <span class="literal">false</span>);</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 调用绘制函数</span></span></span><br><span class="line"><span class="undefined">        animate();</span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="javascript">      <span class="comment">// 窗口大小变化时更新 three.js 渲染器</span></span></span><br><span class="line"><span class="javascript">      <span class="function"><span class="keyword">function</span> <span class="title">onWindowResize</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        windowHalfX = <span class="built_in">window</span>.innerWidth / <span class="number">2</span>;</span></span><br><span class="line"><span class="javascript">        windowHalfY = <span class="built_in">window</span>.innerHeight / <span class="number">2</span>;</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 摄像机的更新</span></span></span><br><span class="line"><span class="javascript">        camera.aspect = <span class="built_in">window</span>.innerWidth / <span class="built_in">window</span>.innerHeight;</span></span><br><span class="line"><span class="undefined">        camera.updateProjectionMatrix();</span></span><br><span class="line"><span class="javascript">        renderer.setSize(<span class="built_in">window</span>.innerWidth, <span class="built_in">window</span>.innerHeight);</span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="javascript">      <span class="comment">// function onDocumentMouseMove(event) &#123;</span></span></span><br><span class="line"><span class="javascript">      <span class="comment">//   mouseX = (event.clientX - windowHalfX) * 10;</span></span></span><br><span class="line"><span class="javascript">      <span class="comment">//   mouseY = (event.clientY - windowHalfY) * 10;</span></span></span><br><span class="line"><span class="javascript">      <span class="comment">// &#125;</span></span></span><br><span class="line"><span class="javascript">      <span class="comment">// 逐帧绘制函数</span></span></span><br><span class="line"><span class="javascript">      <span class="function"><span class="keyword">function</span> <span class="title">animate</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="undefined">        requestAnimationFrame(animate);</span></span><br><span class="line"><span class="undefined">        render();</span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="javascript">      <span class="comment">//</span></span></span><br><span class="line"><span class="javascript">      <span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 根据当前时间创建正弦偏移量</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> time = <span class="built_in">Date</span>.now() * <span class="number">0.001</span>;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">let</span> rx = <span class="built_in">Math</span>.sin(time * <span class="number">0.7</span>) * <span class="number">0.5</span>,</span></span><br><span class="line"><span class="javascript">          ry = <span class="built_in">Math</span>.sin(time * <span class="number">0.3</span>) * <span class="number">0.5</span>,</span></span><br><span class="line"><span class="javascript">          rz = <span class="built_in">Math</span>.sin(time * <span class="number">0.2</span>) * <span class="number">0.5</span>;</span></span><br><span class="line"><span class="javascript">        <span class="comment">// 更新相机的坐标，并让相机面朝场景对准</span></span></span><br><span class="line"><span class="undefined">        camera.position.x += (mouseX - camera.position.x) * 0.05;</span></span><br><span class="line"><span class="undefined">        camera.position.y += (-mouseY - camera.position.y) * 0.05;</span></span><br><span class="line"><span class="undefined">        camera.lookAt(scene.position);</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">        <span class="comment">// 更新对象组的旋转坐标</span></span></span><br><span class="line"><span class="undefined">        group.rotation.x = rx;</span></span><br><span class="line"><span class="undefined">        group.rotation.y = ry;</span></span><br><span class="line"><span class="undefined">        group.rotation.z = rz;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">        <span class="comment">//</span></span></span><br><span class="line"><span class="undefined">        renderer.render(scene, camera);</span></span><br><span class="line"><span class="undefined">      &#125;</span></span><br><span class="line"><span class="javascript">      <span class="comment">// 应用入口</span></span></span><br><span class="line"><span class="undefined">      init();</span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>首先看 相机设置,位于 init 函数的第一行代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">camera = <span class="keyword">new</span> THREE.PerspectiveCamera(</span><br><span class="line">  <span class="number">60</span>,</span><br><span class="line">  <span class="built_in">window</span>.innerWidth / <span class="built_in">window</span>.innerHeight,</span><br><span class="line">  <span class="number">1</span>,</span><br><span class="line">  <span class="number">10000</span></span><br><span class="line">);</span><br><span class="line">camera.position.z = <span class="number">500</span>;</span><br></pre></td></tr></table></figure>
+<p>Three.js 提供两种不同的相机：透视投影摄像机和正交投影摄像机</p>
+<ul>
+<li>透视投影摄像机：这种摄像机的效果更贴近真实世界，物体离摄像机越远，他们就会被渲染得越小。</li>
+<li>正交投影摄像机：对象相对于摄像机的距离对渲染结果是没有影响的。通常被用于二维游戏中。</li>
+</ul>
+<p>看看这个图就明白了：<br><a href="https://raw.githubusercontent.com/leecz/images/master/blog20190701105404.png" target="_blank" rel="noopener">摄像机工作原理图</a></p>
+<p>一般情况都会使用 PerspectiveCamera，来看看这个函数，<br>构造函数： <code>PerspectiveCamera( fov : Number, aspect : Number, near : Number, far : Number )</code></p>
+<ul>
+<li>fov 可视角度</li>
+<li>aspect 实际窗口的纵横比</li>
+<li>near 近处的裁面的距离</li>
+<li>far 远处的裁面的距离</li>
+</ul>
+<p>接着是我们需要绘制的物体了。在本例中，我们准备绘制 1000 个立方体，它们大小相同、位置随机分布。我们可以直接绘制 1000 个几何体然后把他们依次加入场景，但为了更好的管理，我们用组（API THREE.Group）来作为这些立方体的容器，组在功能上和 Object3D 几乎是相同的，其目的是使得组中对象在语法上的结构更加清晰。</p>
+<p>而每个立方体我们用网格（API THREE.Mesh）来构建，网格被用来表示基于以三角形为 polygon mesh（多边形网格）的物体的类。而传入的 Mesh 构造器的两个参数，一个是几何体（API THREE.BoxBufferGeometry），你可以简单把它想像成用于描述几何体的一个有效表述集合，比如顶点位置，面片索引、法相量、颜色值等等；另一个是材质（API THREE.MeshNormalMaterial），材质被用来描述几何体的外观呈现。</p>
+<p>这里有两行代码不是很理解为什么需要：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mesh.matrixAutoUpdate = <span class="literal">false</span>;</span><br><span class="line">mesh.updateMatrix();</span><br></pre></td></tr></table></figure>
+<p>不理解这个矩阵是什么，为什么这里要更新它。<br>有待进一步学习。</p>
+<p>然后是渲染器</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构建渲染器，并将其 canvas 对象添加至 body</span></span><br><span class="line">renderer = <span class="keyword">new</span> THREE.WebGLRenderer(&#123; <span class="attr">antialias</span>: <span class="literal">true</span> &#125;);</span><br><span class="line">renderer.setPixelRatio(<span class="built_in">window</span>.devicePixelRatio);</span><br><span class="line">renderer.setSize(<span class="built_in">window</span>.innerWidth, <span class="built_in">window</span>.innerHeight);</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(renderer.domElement);</span><br></pre></td></tr></table></figure>
+<p>网上找的一个例子：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//开启Three.js渲染器:WebGLRenderer</span></span><br><span class="line"><span class="comment">//声明全局变量</span></span><br><span class="line"><span class="keyword">var</span> renderer;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initThree</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">//获取容器的宽高</span></span><br><span class="line">  width = <span class="built_in">document</span>.getElementById(<span class="string">"canvas3d"</span>).clientWidth; <span class="comment">//获取画布「canvas3d」的宽</span></span><br><span class="line">  height = <span class="built_in">document</span>.getElementById(<span class="string">"canvas3d"</span>).clientHeight; <span class="comment">//获取画布「canvas3d」的高</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">//声明渲染器对象：WebGLRenderer</span></span><br><span class="line">  renderer = <span class="keyword">new</span> THREE.WebGLRenderer(&#123;</span><br><span class="line">    antialias: <span class="literal">true</span>, <span class="comment">//是否开启反锯齿</span></span><br><span class="line">    precision: <span class="string">"highp"</span>, <span class="comment">//着色精度选择</span></span><br><span class="line">    alpha: <span class="literal">true</span>, <span class="comment">//是否可以设置背景色透明</span></span><br><span class="line">    premultipliedAlpha: <span class="literal">false</span>,</span><br><span class="line">    stencil: <span class="literal">false</span>,</span><br><span class="line">    preserveDrawingBuffer: <span class="literal">true</span>, <span class="comment">//是否保存绘图缓冲</span></span><br><span class="line">    maxLights: <span class="number">1</span> <span class="comment">//maxLights:最大灯光数</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//指定渲染器的高宽（和画布框大小一致）</span></span><br><span class="line">  renderer.setSize(width, height);</span><br><span class="line">  <span class="comment">//追加canvas 元素到canvas3d元素中。</span></span><br><span class="line">  <span class="built_in">document</span>.getElementById(<span class="string">"canvas3d"</span>).appendChild(renderer.domElement);</span><br><span class="line">  <span class="comment">//设置canvas背景色(clearColor)和背景色透明度（clearAlpha）</span></span><br><span class="line">  renderer.setClearColor(<span class="number">0x000000</span>, <span class="number">0.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>camera.lookAt(scene.position)</code> 相机对准物体。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>ThreeJs 是对 WebGL 的封装。<br>最基本的三要素： 场景，渲染器，摄像机。</p>
+<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://cloud.tencent.com/developer/news/84163" target="_blank" rel="noopener">Threejs 快速入门</a><br><a href="https://www.cnblogs.com/leinov/p/6015156.html" target="_blank" rel="noopener">了解摄像机</a><br><a href="https://zhuanlan.zhihu.com/p/34717121" target="_blank" rel="noopener">Three.js 二三事</a><br><a href="https://newbieweb.lione.me/2016/10/18/webgl-threejs-1-2/" target="_blank" rel="noopener">WebGL ThreeJS 学习总结一二</a><br><a href="https://segmentfault.com/a/1190000014211729" target="_blank" rel="noopener">渲染器</a><br><a href="https://blog.csdn.net/ithanmang/article/details/82735273" target="_blank" rel="noopener">摄像机移动 OrbitControls 轨道控件的围绕目标 target 参数</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Three-Js-入门学习"><span class="toc-number">1.</span> <span class="toc-text">Three Js 入门学习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#WebGL-是"><span class="toc-number">1.0.1.</span> <span class="toc-text">WebGL 是</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#检测浏览器用户环境是否支持-WebGL"><span class="toc-number">1.0.2.</span> <span class="toc-text">检测浏览器用户环境是否支持 WebGL ?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#清空画布"><span class="toc-number">1.0.3.</span> <span class="toc-text">清空画布</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Three-js-是"><span class="toc-number">1.0.4.</span> <span class="toc-text">Three js 是</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Demo-学习"><span class="toc-number">1.0.5.</span> <span class="toc-text">Demo 学习</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">1.0.6.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-number">1.0.7.</span> <span class="toc-text">参考</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&text=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&title=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&is_video=false&description=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=时空数据可视化学习01-ThreeJs入门&body=Check out this article: https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&title=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&title=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&title=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&title=时空数据可视化学习01-ThreeJs入门"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://leecz.github.io/2019/07/01/JavaScript/时空数据可视化学习01-ThreeJs入门/&name=时空数据可视化学习01-ThreeJs入门&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 lichengzhi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+</body>
+</html>
+<!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+<!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-131291658-2', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
